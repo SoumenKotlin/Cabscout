@@ -1,7 +1,8 @@
 package com.app.cabscout.controller;
 
 /**
- * Created by rishav on 17/1/17.
+ * Created by rishav
+ * on 17/1/17.
  */
 
 public class ModelManager {
@@ -11,6 +12,7 @@ public class ModelManager {
     private LoginManager loginManager;
     private SearchAddressManager searchAddressManager;
     private LocationDirectionManager locationDirectionManager;
+    private LocationService locationService;
     private static ModelManager modelManager;
 
 
@@ -20,6 +22,7 @@ public class ModelManager {
         searchAddressManager = new SearchAddressManager();
         loginManager = new LoginManager();
         locationDirectionManager = new LocationDirectionManager();
+        locationService = new LocationService();
     }
 
     public static ModelManager getInstance() {
@@ -47,5 +50,9 @@ public class ModelManager {
 
     public LocationDirectionManager getLocationDirectionManager() {
         return locationDirectionManager;
+    }
+
+    public LocationService getLocationService() {
+        return locationService;
     }
 }

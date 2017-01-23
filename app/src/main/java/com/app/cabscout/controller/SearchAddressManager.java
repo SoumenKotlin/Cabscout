@@ -32,11 +32,9 @@ public class SearchAddressManager {
     public static ArrayList<String> placeIdList;
     public static ArrayList<SearchAddressBeans> addressList;
 
-
     public void getAddress(Context context, String params) {
         new ExecuteTask(context).execute(params);
-        placeIdList = new ArrayList<>();
-        addressList = new ArrayList<>();
+
     }
 
     private class ExecuteTask extends AsyncTask<String, String, String> {
@@ -52,6 +50,8 @@ public class SearchAddressManager {
         protected String doInBackground(String... strings) {
             HttpHandler httpHandler = new HttpHandler();
             String response="";
+            placeIdList = new ArrayList<>();
+            addressList = new ArrayList<>();
 
             try {
                 sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
@@ -65,7 +65,6 @@ public class SearchAddressManager {
 
                     JSONObject jsonObj = new JSONObject(response);
                     JSONArray jsonArray = jsonObj.getJSONArray("predictions");
-
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -94,7 +93,6 @@ public class SearchAddressManager {
                         SearchAddressBeans searchAddressBeans = new SearchAddressBeans(address, area);
 
                         addressList.add(searchAddressBeans);
-
 
                         String place_id = jsonObject.getString("place_id");
 

@@ -15,4 +15,8 @@ public class Constants {
     public static final int ACCOUNT_NOT_REGISTERED = 1006;
 
     public static final int ADDRESS_SUCCESS = 1007;
+    public static final int SOURCE_SUCCESS = 1008;
+    public static final int DESTINATION_SUCCESS = 1009;
+    public static final int DESTINATION_RIDE_SUCCESS = 1010;
+
 }

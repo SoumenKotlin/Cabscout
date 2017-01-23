@@ -5,7 +5,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Constants;
+import com.app.cabscout.model.Event;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,12 +65,25 @@ public class PlaceParser {
                 Log.e(TAG, "searched latitude-- " + latitude);
                 Log.e(TAG, "searched longitude-- " + longitude);
 
-                if (input.equals("pickup")) {
-                    CSPreferences.putString(mContext, "source_latitude", latitude);
-                    CSPreferences.putString(mContext, "source_longitude", longitude);
-                } else {
-                    CSPreferences.putString(mContext, "destination_latitude", latitude);
-                    CSPreferences.putString(mContext, "destination_longitude", longitude);
+                switch (input) {
+                    case "pickup":
+                        CSPreferences.putString(mContext, "source_latitude", latitude);
+                        CSPreferences.putString(mContext, "source_longitude", longitude);
+                        EventBus.getDefault().post(new Event(Constants.SOURCE_SUCCESS, ""));
+
+                        break;
+                    case "drop_book":
+                        CSPreferences.putString(mContext, "destination_latitude", latitude);
+                        CSPreferences.putString(mContext, "destination_longitude", longitude);
+                        EventBus.getDefault().post(new Event(Constants.DESTINATION_RIDE_SUCCESS, ""));
+
+                        break;
+                    case "drop":
+                        CSPreferences.putString(mContext, "destination_latitude", latitude);
+                        CSPreferences.putString(mContext, "destination_longitude", longitude);
+                        EventBus.getDefault().post(new Event(Constants.DESTINATION_SUCCESS, ""));
+
+                        break;
                 }
 
             } catch (JSONException e) {

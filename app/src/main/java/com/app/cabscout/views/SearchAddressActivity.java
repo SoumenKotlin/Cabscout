@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.app.cabscout.R;
 import com.app.cabscout.controller.ModelManager;
@@ -40,17 +41,12 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
     ImageView clearText;
     RecyclerView recyclerView;
     Activity activity = this;
-  //  String response;
     ArrayList<String> placeIdList;
     ArrayList<SearchAddressBeans> addressList;
     SearchAddressAdapter searchAddressAdapter;
    // String address, area;
     String str_address;
-
-    /* private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
-    private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
-    private static final String OUT_JSON = "/json";
-    public static String API_KEY = "AIzaSyAsE0edaQKl5wgqcfTibDmdUuHQgFEoldc"; */
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +65,8 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
         str_address = getIntent().getStringExtra("Address");
 
         edit_query = (EditText) findViewById(R.id.edit_query);
@@ -84,25 +82,32 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
             public void onClick(View view, int position) {
                 SearchAddressBeans searchAddressBeans = addressList.get(position);
 
-                if (str_address.equals("Pickup")) {
-                    PlaceParser placeParser = new PlaceParser();
-                    placeParser.getAddress(activity, placeIdList.get(position), "pickup");
+                switch (str_address) {
+                    case "Pickup": {
+                        PlaceParser placeParser = new PlaceParser();
+                        placeParser.getAddress(activity, placeIdList.get(position), "pickup");
 
-                    Log.e(TAG, "pickup-- "+searchAddressBeans.getAddress());
+                        Log.e(TAG, "pickup-- " + searchAddressBeans.getAddress());
 
-                    CSPreferences.putString(activity, "pickup_address", searchAddressBeans.getAddress());
-                    finish();
-                }
-                else {
-                    Intent i = new Intent(activity, BookRideActivity.class);
-                    startActivity(i);
-                    finish();
+                        CSPreferences.putString(activity, "pickup_address", searchAddressBeans.getAddress());
+                        //finish();
+                        break;
+                    }
+                    case "Destination_Book": {
+                        PlaceParser placeParser = new PlaceParser();
+                        placeParser.getAddress(activity, placeIdList.get(position), "drop_book");
 
-                    PlaceParser placeParser = new PlaceParser();
-                    placeParser.getAddress(activity, placeIdList.get(position), "drop");
+                        CSPreferences.putString(activity, "drop_address", searchAddressBeans.getAddress());
+                        break;
+                    }
+                    case "Destination": {
+                        PlaceParser placeParser = new PlaceParser();
+                        placeParser.getAddress(activity, placeIdList.get(position), "drop");
 
-                    CSPreferences.putString(activity, "drop_address", searchAddressBeans.getAddress());
+                        CSPreferences.putString(activity, "drop_address", searchAddressBeans.getAddress());
 
+                        break;
+                    }
                 }
             }
 
@@ -120,8 +125,8 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                recyclerView.setAdapter(null);
                 ModelManager.getInstance().getSearchAddressManager().getAddress(activity, charSequence.toString());
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -159,86 +164,31 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
     public void onEvent(Event event) {
         switch (event.getKey()) {
             case Constants.ADDRESS_SUCCESS:
+                progressBar.setVisibility(View.INVISIBLE);
                 placeIdList = SearchAddressManager.placeIdList;
                 addressList = SearchAddressManager.addressList;
 
                 searchAddressAdapter = new SearchAddressAdapter(activity, addressList);
                 recyclerView.setAdapter(searchAddressAdapter);
                 break;
+
+            case Constants.SOURCE_SUCCESS:
+                finish();
+                break;
+
+            case Constants.DESTINATION_SUCCESS:
+                Intent i = new Intent(activity, BookRideActivity.class);
+                startActivity(i);
+                finish();
+                break;
+
+            case Constants.DESTINATION_RIDE_SUCCESS:
+                finish();
+                break;
+
         }
     }
 
-    /*class ExecuteTask extends AsyncTask<String, String, String> {
-
-        StringBuilder sb;
-
-        @Override
-        protected String doInBackground(String... strings) {
-            HttpHandler httpHandler = new HttpHandler();
-
-            try {
-                sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
-                sb.append("?key=").append(API_KEY);
-                sb.append("&input=").append(URLEncoder.encode(strings[0], "utf8"));
-
-                Log.e(TAG, "URL-- "+sb.toString());
-
-                response = httpHandler.makeServiceCall(sb.toString());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.e(TAG, "response--"+s);
-
-
-            try {
-
-                JSONObject jsonObj = new JSONObject(s);
-                JSONArray jsonArray = jsonObj.getJSONArray("predictions");
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject  jsonObject = jsonArray.getJSONObject(i);
-
-                    JSONArray array = jsonObject.getJSONArray("terms");
-
-                    area = "";
-                    StringBuilder s3 = new StringBuilder();
-                    for (int j=0; j< array.length()-1; j++) {
-                        JSONObject terms = array.getJSONObject(j);
-
-                        if (j==0) {
-                            address = terms.getString("value");
-                        }
-                        else {
-
-                            s3.append(terms.getString("value")).append(", ");
-                            area = s3.toString().substring(0,s3.toString().length()-2);
-                        }
-                    }
-
-                    SearchAddressBeans searchAddressBeans = new SearchAddressBeans(address, area);
-
-                    addressList.add(searchAddressBeans);
-
-                    searchAddressAdapter.notifyDataSetChanged();
-
-                    String place_id = jsonObject.getString("place_id");
-
-                    placeIdList.add(place_id);
-
-                }
-
-            } catch (JSONException e) {
-                Log.e("", "Cannot process JSON results", e);
-
-            }
-        }
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

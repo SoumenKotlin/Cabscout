@@ -26,6 +26,6 @@
     <string name="help">Help</string>
     <string name="logout">Logout</string>
     <string name="promo_code_note">Note: Promo code and corp. account only work with your preferred provider. They will not be applied to rides handed by other drivers on the network.</string>
-    <string name="destination">Destination</string>
+    <string name="destination">Destination required</string>
     <string name="pickup_location">Pickup Location</string>
 </resources>

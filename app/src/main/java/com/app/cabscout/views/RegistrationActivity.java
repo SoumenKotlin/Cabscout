@@ -99,7 +99,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(this, "Please enter the valid email address", Toast.LENGTH_SHORT).show();
                 }
                 else if(!termsCheckBox.isChecked() || !policyCheckBox.isChecked()) {
-                    Toast.makeText(this, "You must be agree to all terms and conditions", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You must be agree to all the terms and conditions", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     progressView.setVisibility(View.VISIBLE);

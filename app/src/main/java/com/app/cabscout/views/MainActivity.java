@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.cabscout.R;
+import com.app.cabscout.controller.LocationService;
 import com.app.cabscout.model.CSPreferences;
 import com.app.cabscout.model.Utils;
 import com.google.android.gms.common.ConnectionResult;
@@ -44,7 +45,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnCameraMoveStartedListener, View.OnClickListener{
+        View.OnClickListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
     Toolbar toolbar;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     float zoomLevel;
     Location mLastLocation;
     LatLng latLng;
-    RelativeLayout markerLayout;
 
     ImageView imageMarker;
     TextView scheduleRide, pickupAddress, dropAddress;
@@ -66,6 +66,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RelativeLayout cabSelectionLayout;
     ImageView anyCab, regularCab, deluxeCab;
     private int STORAGE_PERMISSION_CODE = 23;
+
+    private int fingers = 0;
+    private long lastZoomTime = 0;
+    private float lastSpan = -1;
+    private Handler handler = new Handler();
+
+    private ScaleGestureDetector gestureDetector;
+    //variable for storing the time of first click
+    long startTime;
+    //constant for defining the time duration between the click that can be considered as double-tap
+    static final int MAX_DURATION = 200;
+    RelativeLayout timeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION}, STORAGE_PERMISSION_CODE);
 
-        markerLayout = (RelativeLayout)findViewById(R.id.markerLayout);
         imageMarker = (ImageView)findViewById(R.id.marker);
         scheduleRide = (TextView)findViewById(R.id.scheduleRide);
 
@@ -97,9 +108,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         pickupSearch = (CardView)cabSelectionLayout.findViewById(R.id.pickUpSearch);
         dropSearch = (CardView)cabSelectionLayout.findViewById(R.id.dropSearch);
+
         anyCab = (ImageView)cabSelectionLayout.findViewById(R.id.anyCab);
         regularCab = (ImageView)cabSelectionLayout.findViewById(R.id.regularCab);
         deluxeCab = (ImageView)cabSelectionLayout.findViewById(R.id.deluxeCab);
+
+        timeLayout = (RelativeLayout)findViewById(R.id.timeLayout);
 
         pickupSearch.setOnClickListener(this);
         dropSearch.setOnClickListener(this);
@@ -192,32 +206,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (CSPreferences.readString(activity, "pickup_address").isEmpty()) {
-            pickupAddress.setText(R.string.pickup_location);
-        }
-        else {
+        if (!CSPreferences.readString(activity, "pickup_address").isEmpty()) {
             pickupAddress.setText(CSPreferences.readString(activity, "pickup_address"));
             dropSearch.setVisibility(View.VISIBLE);
+            if (googleMap != null) {
+                double lat= Double.parseDouble(CSPreferences.readString(activity, "source_latitude"));
+                double lng= Double.parseDouble(CSPreferences.readString(activity, "source_longitude"));
+                CameraPosition position = CameraPosition.builder()
+                        .target( new LatLng(lat, lng) )
+                        .zoom( 16f )
+                        .bearing( 0.0f )
+                        .tilt( 0.0f )
+                        .build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+
+            }
         }
         if (CSPreferences.readString(activity, "drop_address").isEmpty()) {
             dropAddress.setText(R.string.destination);
         }
         else {
-            dropAddress.setText(CSPreferences.readString(activity, "drop_address"));
+            //dropAddress.setText(CSPreferences.readString(activity, "drop_address"));
+            dropAddress.setText(R.string.destination);
         }
-
     }
 
     @Override
@@ -234,53 +250,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void initCamera(Location location) {
+    private void initCamera(Location mLocation) {
 
-        Log.e(TAG, "current location---"+location);
+        double lat, lng;
 
-        try {
+        if (mLocation == null) {
+            mLocation = LocationService.location;
+        }
 
-            boolean success = googleMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
-            if (!success) {
-                Log.e("sorry try again", "Style parsing failed.");
-            }
-        }catch (Resources.NotFoundException e){
+        Log.e(TAG, "current location---"+ mLocation);
 
-            e.printStackTrace();
+        CameraPosition position;
+
+        if (mLocation != null) {
+             position = CameraPosition.builder()
+                    .target(new LatLng(mLocation.getLatitude(),
+                            mLocation.getLongitude()))
+                    .zoom(16f)
+                    .bearing(0.0f)
+                    .tilt(0.0f)
+                    .build();
+
+            lat = mLocation.getLatitude();
+            lng = mLocation.getLongitude();
+
+        }
+        else {
+            position = CameraPosition.builder()
+                    .target(new LatLng(30.708552, 76.692349))
+                    .zoom(16f)
+                    .bearing(0.0f)
+                    .tilt(0.0f)
+                    .build();
+
+            lat = 30.708552;
+            lng = 76.692349;
         }
 
 
        // googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-       /* View btnMyLocation = ((View) mapView.findViewById(1).getParent()).findViewById(2);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(80,80); // size of button in dp
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-        params.setMargins(0, 0, 20, 0);
-        btnMyLocation.setLayoutParams(params);*/
-
-        CameraPosition position = CameraPosition.builder()
-                .target( new LatLng( location.getLatitude(),
-                        location.getLongitude() ) )
-                .zoom( 16f )
-                .bearing( 0.0f )
-                .tilt( 0.0f )
-                .build();
-
-
         googleMap.setPadding(0, dpToPx(48), 0, 0);
-        final double lat = location.getLatitude();
-        double lng= location.getLongitude();
 
-
-        latLng = new LatLng(lat,lng);
-
+        latLng = new LatLng(lat, lng);
 
         zoomLevel = position.zoom;
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -296,8 +311,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 latLng = googleMap.getCameraPosition().target;
 
-                markerLayout.setVisibility(View.GONE);
-                imageMarker.setVisibility(View.VISIBLE);
+                timeLayout.setVisibility(View.GONE);
 
             }
         });
@@ -314,8 +328,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        markerLayout.setVisibility(View.VISIBLE);
-                        imageMarker.setVisibility(View.GONE);
+                        timeLayout.setVisibility(View.VISIBLE);
                     }
                 }, 2000);
 
@@ -360,13 +373,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private int fingers = 0;
-    private long lastZoomTime = 0;
-    private float lastSpan = -1;
-    private Handler handler = new Handler();
-
-    private ScaleGestureDetector gestureDetector;
-
     private void enableScrolling() {
         if (googleMap != null && !googleMap.getUiSettings().isScrollGesturesEnabled()) {
             handler.postDelayed(new Runnable() {
@@ -384,11 +390,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             googleMap.getUiSettings().setAllGesturesEnabled(false);
         }
     }
-
-    //variable for storing the time of first click
-    long startTime;
-    //constant for defining the time duration between the click that can be considered as double-tap
-    static final int MAX_DURATION = 200;
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -415,10 +416,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
         }
-
-        /*if (fingers==0) {
-
-        }*/
 
         if (fingers > 1) {
             disableScrolling();
@@ -469,6 +466,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
+        try {
+
+            boolean success = this.googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+            if (!success) {
+                Log.e("sorry try again", "Style parsing failed.");
+            }
+        }catch (Resources.NotFoundException e){
+
+            e.printStackTrace();
+        }
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -480,13 +490,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        if (mLastLocation!=null) {
-            initCamera(mLastLocation);
-        }
-        else {
             if (CSPreferences.readString(activity, "pickup_address").isEmpty())
                 dropSearch.setVisibility(View.GONE);
-        }
+        initCamera(mLastLocation);
 
         this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
    //     this.googleMap.setMyLocationEnabled(true);
@@ -518,12 +524,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return true;
     }
-
-    @Override
-    public void onCameraMoveStarted(int i) {
-
-
-    }
-
 
 }

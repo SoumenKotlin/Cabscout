@@ -1,8 +1,10 @@
 package com.app.cabscout.views;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,6 +15,8 @@ import android.widget.Toast;
 
 import com.app.cabscout.R;
 import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Utils;
+import com.app.cabscout.model.custom.CustomTextViewBold;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
@@ -22,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -30,7 +35,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookRideActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener {
+public class BookRideActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener, View.OnClickListener {
 
     private static final String TAG = BookRideActivity.class.getSimpleName();
     Activity activity = this;
@@ -39,6 +44,8 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
     TextView pickupAddress, destinationAddress;
     String src_lat, src_lng, dest_lat, dest_lng;
     private GoogleMap gMap;
+    CardView pickupSearch, dropSearch;
+    private CustomTextViewBold distance;
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.colorAccent,R.color.colorAccent,R.color.colorAccent,R.color.colorAccent,R.color.colorAccent};
@@ -51,7 +58,6 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_ride);
 
-        initViews();
     }
 
     public void initViews() {
@@ -69,7 +75,13 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
         cabSelectionLayout = (RelativeLayout)v.findViewById(R.id.cabBookLayout);
 
         pickupAddress = (TextView)cabSelectionLayout.findViewById(R.id.pickupAddress);
-        destinationAddress = (TextView)cabSelectionLayout.findViewById(R.id.destinationAddress);
+        destinationAddress = (TextView)cabSelectionLayout.findViewById(R.id.dropAddress);
+        distance = (CustomTextViewBold)cabSelectionLayout.findViewById(R.id.distance);
+
+        pickupSearch = (CardView)cabSelectionLayout.findViewById(R.id.pickUpSearch);
+        dropSearch = (CardView)cabSelectionLayout.findViewById(R.id.dropSearch);
+        pickupSearch.setOnClickListener(this);
+        dropSearch.setOnClickListener(this);
 
         pickupAddress.setText(CSPreferences.readString(activity, "pickup_address"));
         destinationAddress.setText(CSPreferences.readString(activity, "drop_address"));
@@ -82,6 +94,32 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        initViews();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.pickUpSearch:
+                Intent i = new Intent(activity, SearchAddressActivity.class);
+                i.putExtra("Address", "Pickup");
+                startActivity(i);
+                break;
+
+            case R.id.dropSearch:
+                Intent i2 = new Intent(activity, SearchAddressActivity.class);
+                i2.putExtra("Address", "Destination_Book");
+                startActivity(i2);
+                break;
+        }
 
     }
 
@@ -99,6 +137,7 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
 
         gMap = googleMap;
+        gMap.clear();
 
        /* CameraPosition position = CameraPosition.builder()
                 .target( new LatLng( Double.parseDouble(src_lat),
@@ -138,18 +177,19 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
     public void onRoutingSuccess(ArrayList<Route> route, int j) {
         double midLat = (Double.parseDouble(src_lat)+Double.parseDouble(dest_lat))/2;
         double midLng = (Double.parseDouble(src_lng)+Double.parseDouble(dest_lng))/2;
-     //   CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(midLat, midLng));
-     //   CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
 
-        /*CameraPosition position = CameraPosition.builder()
+       // CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(midLat, midLng));
+        //   CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+
+        CameraPosition position = CameraPosition.builder()
                 .target( new LatLng(midLat, midLng) )
-                .zoom( 16f )
+                .zoom( 13f )
                 .bearing( 0.0f )
                 .tilt( 0.0f )
-                .build();*/
+                .build();
 
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(midLat, midLng), gMap.getCameraPosition().zoom));
-
+        /*gMap.moveCamera(center);*/
+        gMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
 
         if(polylines.size()>0) {
             for (Polyline poly : polylines) {
@@ -173,19 +213,22 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
 
             Log.e(TAG, "distance-- "+route.get(i).getDistanceValue());
             Log.e(TAG, "time-- "+route.get(i).getDurationValue());
+            float d = (route.get(i).getDistanceValue()) / 1000;
+            float dt = Utils.round(d, 1);
+            distance.setText(String.format("%s km", String.valueOf(dt)));
             Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
         }
 
         // Start marker
         MarkerOptions options = new MarkerOptions();
         options.position(start);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_icon_pin));
         gMap.addMarker(options);
 
         // End marker
         options = new MarkerOptions();
         options.position(end);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_icon_pin));
         gMap.addMarker(options);
     }
 

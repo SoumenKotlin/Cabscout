@@ -70,6 +70,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             @Override
             public void run() {
 
+                ModelManager.getInstance().getLocationService().getLocation(activity);
 
                 CSPreferences.putString(activity, "pickup_address", "");
                 CSPreferences.putString(activity, "drop_address", "");

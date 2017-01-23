@@ -18,12 +18,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:layout_gravity="center"
             android:gravity="center"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
-            <TextView
+            <com.app.cabscout.model.custom.CustomTextViewBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CAB"
@@ -31,7 +31,7 @@
                 android:textStyle="bold"
                 android:textColor="#000000" />
 
-            <TextView
+            <com.app.cabscout.model.custom.CustomTextViewBold
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SCOUT"
@@ -41,10 +41,12 @@
 
         </LinearLayout>
 
-        <TextView
+        <com.app.cabscout.model.custom.CustomTextViewRegular
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
             android:textAlignment="center"
             android:textColor="#000000"
             android:padding="10dp"
@@ -52,7 +54,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <com.app.cabscout.model.custom.CustomTextViewRegular
         android:id="@+id/selectCab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +62,8 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textAllCaps="false"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:padding="20dp"
         android:layout_centerInParent="true"
         style="?android:attr/borderlessButtonStyle"
@@ -94,7 +97,7 @@
 
         </LinearLayout>
 
-        <TextView
+        <com.app.cabscout.model.custom.CustomTextViewRegular
             android:id="@+id/next_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,7 +111,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:background="@drawable/view_clicked"/>
 
-        <TextView
+        <com.app.cabscout.model.custom.CustomTextViewRegular
             android:id="@+id/alreadyAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
