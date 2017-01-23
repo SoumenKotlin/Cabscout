@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "974056494062",
+    "firebase_url": "https://cabscout-5d705.firebaseio.com",
+    "project_id": "cabscout-5d705",
+    "storage_bucket": "cabscout-5d705.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974056494062:android:117329dfb4514e0c",
+        "android_client_info": {
+          "package_name": "com.app.cabscout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974056494062-geblm3g5gf7rmnb74henngpmb413kekd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjIsEt7uw-jltM1-QCezDivP7fdIm5ic4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

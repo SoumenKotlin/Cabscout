@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Cabscout</string>
+    <string name="home">Home</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="map">Map</string>
+    <string name="payment">Payment</string>
+    <string name="history">History</string>
+    <string name="schedule_ride">Schedule Ride</string>
+    <string name="settings">Settings</string>
+    <string name="already_account">Already have an account? Signin</string>
+    <string name="next">Next</string>
+    <string name="select_your_taxi_company">Select your taxi company</string>
+    <string name="cabscout_description">Cabscout, LLC. is a technology company that provides a dispatching to cab/car service companies. To Access you must specify your preferred cab/car service company.</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone number</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="terms_conditions">I have read, understood and agree to the</string>
+    <string name="terms_of_services">terms of services</string>
+    <string name="privacy_policy">privacy policy</string>
+    <string name="login">Login</string>
+    <string name="facebook_login">Facebook login</string>
+    <string name="help">Help</string>
+    <string name="logout">Logout</string>
+    <string name="promo_code_note">Note: Promo code and corp. account only work with your preferred provider. They will not be applied to rides handed by other drivers on the network.</string>
+    <string name="destination">Destination</string>
+    <string name="pickup_location">Pickup Location</string>
+</resources>

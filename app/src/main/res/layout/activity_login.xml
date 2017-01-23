@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_icon_bg">
+
+    <com.app.cabscout.model.custom.CustomTextViewRegular
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:textAllCaps="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/black"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <include layout="@layout/app_logo" />
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_shape"
+                android:hint="@string/email"
+                android:padding="15dp"
+                android:inputType="textEmailAddress"
+                android:layout_marginTop="30dp"
+                android:drawableLeft="@drawable/ic_icon_email"
+                android:drawableStart="@drawable/ic_icon_email"
+                android:drawablePadding="20dp"/>
+
+            <EditText
+                android:id="@+id/editPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_shape"
+                android:hint="@string/password"
+                android:padding="15dp"
+                android:inputType="textPassword"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/ic_icon_lock"
+                android:drawableStart="@drawable/ic_icon_lock"
+                android:drawablePadding="20dp"/>
+
+            <com.app.cabscout.model.custom.CustomTextViewRegular
+                android:id="@+id/textLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                android:padding="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@drawable/view_clicked"/>
+
+            <com.app.cabscout.model.custom.CustomTextViewRegular
+                android:id="@+id/fbLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/facebook_login"
+                android:padding="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                style="?android:attr/borderlessButtonStyle"
+                android:drawableLeft="@drawable/ic_icon_facebook"
+                android:drawableStart="@drawable/ic_icon_facebook"
+                android:background="@drawable/round_shape_blue"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_margin="20dp">
+
+                <com.app.cabscout.model.custom.CustomTextViewRegular
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Not have an acount?"/>
+
+                <com.app.cabscout.model.custom.CustomTextViewRegular
+                    android:id="@+id/createAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sign Up here"
+                    android:textAllCaps="false"
+                    style="?borderlessButtonStyle"
+                    android:textColor="#ff0000"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        android:id="@+id/progressView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        app:cpv_color="#ff0000"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

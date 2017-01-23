@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/map"
+        android:title="@string/map"
+        android:icon="@drawable/ic_icon_map" />
+
+    <item android:id="@+id/payment"
+        android:title="@string/payment"
+        android:icon="@drawable/ic_icon_payment" />
+
+    <item android:id="@+id/history"
+        android:title="@string/history"
+        android:icon="@drawable/ic_icon_history" />
+
+    <item android:id="@+id/schedule_ride"
+        android:title="@string/schedule_ride"
+        android:icon="@drawable/ic_icon_schedule_ride" />
+
+    <item android:id="@+id/settings"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_icon_setting" />
+
+    <item android:id="@+id/help"
+        android:title="@string/help"
+        android:icon="@drawable/ic_icon_help" />
+
+    <item android:id="@+id/logout"
+        android:title="@string/logout"
+        android:icon="@drawable/ic_icon_logout" />
+
+</menu>
