@@ -139,18 +139,10 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
         gMap = googleMap;
         gMap.clear();
 
-       /* CameraPosition position = CameraPosition.builder()
-                .target( new LatLng( Double.parseDouble(src_lat),
-                        Double.parseDouble(src_lng) ) )
-                .zoom( 16f )
-                .bearing( 0.0f )
-                .tilt( 0.0f )
-                .build();*/
 
         start = new LatLng(Double.parseDouble(src_lat), Double.parseDouble(src_lng));
         end = new LatLng(Double.parseDouble(dest_lat), Double.parseDouble(dest_lng));
 
-       // ModelManager.getInstance().getLocationDirectionManager().getAddress(activity, source, destination, gMap);
 
         Routing routing = new Routing.Builder()
                 .travelMode(Routing.TravelMode.DRIVING)
@@ -159,7 +151,6 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
                 .build();
         routing.execute();
 
-        //gMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
     }
 
     @Override
@@ -178,9 +169,6 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
         double midLat = (Double.parseDouble(src_lat)+Double.parseDouble(dest_lat))/2;
         double midLng = (Double.parseDouble(src_lng)+Double.parseDouble(dest_lng))/2;
 
-       // CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(midLat, midLng));
-        //   CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
         CameraPosition position = CameraPosition.builder()
                 .target( new LatLng(midLat, midLng) )
                 .zoom( 13f )
@@ -188,7 +176,6 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
                 .tilt( 0.0f )
                 .build();
 
-        /*gMap.moveCamera(center);*/
         gMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
 
         if(polylines.size()>0) {

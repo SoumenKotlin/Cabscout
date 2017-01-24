@@ -10,4 +10,5 @@ public class Config {
     public static final String cab_companies_url = BASE_URL + "company_list";
     public static final String registration_url = BASE_URL + "customer_register";
     public static final String login_url = BASE_URL+"customer_login";
+    public static final String request_ride_url = BASE_URL+"request_driver";
 }

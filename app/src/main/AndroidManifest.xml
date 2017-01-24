@@ -33,7 +33,11 @@
         </activity>
         <activity android:name=".views.LoginActivity" />
         <activity android:name=".views.SearchAddressActivity" />
-        <activity android:name=".views.BookRideActivity"/>
+        <activity android:name=".views.BookRideActivity" />
+        <activity
+            android:name=".views.ProfileActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".views.ScheduleActivity"></activity>
     </application>
 
 </manifest>

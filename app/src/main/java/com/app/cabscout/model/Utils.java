@@ -12,6 +12,8 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -86,6 +88,122 @@ public class Utils {
         BigDecimal bd = new BigDecimal(Float.toString(d));
         bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
         return bd.floatValue();
+    }
+
+    public static String dateConverter(int year, int monthOfYear, int dayOfMonth) {
+        String monthFormat = null;
+        String dayFormat = null;
+
+        Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+        int result = calendar.get(Calendar.DAY_OF_WEEK);
+        int m = calendar.get(Calendar.MONTH);
+
+        switch (result) {
+            case Calendar.SUNDAY:
+                dayFormat = "Sun";
+                break;
+            case Calendar.MONDAY:
+                dayFormat = "Mon";
+                break;
+            case Calendar.TUESDAY:
+                dayFormat = "Tue";
+                break;
+            case Calendar.WEDNESDAY:
+                dayFormat = "Wed";
+                break;
+            case Calendar.THURSDAY:
+                dayFormat = "Thu";
+                break;
+            case Calendar.FRIDAY:
+                dayFormat = "Fri";
+                break;
+            case Calendar.SATURDAY:
+                dayFormat = "Sat";
+                break;
+
+        }
+
+        switch (m) {
+            case 0:
+                monthFormat = "Jan";
+                break;
+
+            case 1:
+                monthFormat = "Feb";
+                break;
+
+            case 2:
+                monthFormat = "Mar";
+                break;
+
+            case 3:
+                monthFormat = "Apr";
+                break;
+
+            case 4:
+                monthFormat = "May";
+                break;
+
+            case 5:
+                monthFormat = "Jun";
+                break;
+
+            case 6:
+                monthFormat = "Jul";
+                break;
+
+            case 7:
+                monthFormat = "Aug";
+                break;
+
+            case 8:
+                monthFormat = "Sep";
+                break;
+
+            case 9:
+                monthFormat = "Oct";
+                break;
+
+            case 10:
+                monthFormat = "Nov";
+                break;
+
+            case 11:
+                monthFormat = "Dec";
+                break;
+        }
+
+        return monthFormat+","+dayFormat+ " "+ dayOfMonth;
+    }
+
+    public static String timeConverter(int minute, int hourOfDay) {
+        String time = null;
+        String min;
+
+        if (minute < 10) {
+            min = "0"+minute;
+        }
+        else {
+            min = String.valueOf(minute);
+        }
+
+        if(hourOfDay>12) {
+            time = "0"+String.valueOf(hourOfDay-12)+ ":"+(min+" pm");
+            Log.e(TAG, time);
+        } else if(hourOfDay==12) {
+            time = "12"+ ":"+(min+" pm");
+            Log.e(TAG, time);
+        } else if(hourOfDay<12) {
+            if(hourOfDay!=0) {
+                time = "0"+String.valueOf(hourOfDay) + ":" + (min + " am");
+                Log.e(TAG, time);
+            } else {
+                time = "12" + ":" + (min + " am");
+                Log.e(TAG, time);
+            }
+        }
+
+        return time;
     }
 
 }

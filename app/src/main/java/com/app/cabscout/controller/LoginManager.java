@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.app.cabscout.model.CSPreferences;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 
@@ -49,6 +50,7 @@ public class LoginManager {
                 int id = response.getInt("id");
                 String message = response.getString("message");
                 if (id >= 1) {
+                    CSPreferences.putString(mContext, "customer_id", String.valueOf(id));
                     EventBus.getDefault().post(new Event(Constants.LOGIN_SUCCESS, message));
                 }
                 else if (id == -1) {

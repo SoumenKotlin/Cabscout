@@ -135,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (view.getId()) {
 
             case R.id.scheduleRide:
+                Intent scheduleIntent = new Intent(activity, ScheduleActivity.class);
+                startActivity(scheduleIntent);
                 break;
 
             case R.id.pickUpSearch:
@@ -174,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
 
             @Override
             public void onDrawerClosed(View v) {
@@ -333,7 +340,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }, 2000);
 
                 Log.e(TAG, "lng--"+latLng.longitude);
-                pickupAddress.setText(Utils.getCompleteAddressString(activity, latLng.latitude, latLng.longitude));
+                String address = Utils.getCompleteAddressString(activity, latLng.latitude, latLng.longitude);
+                pickupAddress.setText(address);
+                CSPreferences.putString(activity, "pickup_address", address);
 
             }
         });
@@ -513,13 +522,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         switch (item.getItemId()) {
+
             case R.id.logout:
                 Intent i = new Intent(activity, CabCompaniesActivity.class);
                 startActivity(i);
                 finish();
                 CSPreferences.clearPref(activity);
                 CSPreferences.putString(activity, "login_status", "false");
+                break;
+
+            case R.id.settings:
+                Intent settingsIntent = new Intent(activity, ProfileActivity.class);
+                startActivity(settingsIntent);
+                break;
+
+            case R.id.schedule_ride:
                 break;
         }
         return true;

@@ -19,4 +19,10 @@ public class Constants {
     public static final int DESTINATION_SUCCESS = 1009;
     public static final int DESTINATION_RIDE_SUCCESS = 1010;
 
+    public static final int DATE_SUCCESS = 1011;
+    public static final int TIME_SUCCESS = 1012;
+
+    public static final int REQUEST_RIDE_SUCCESS = 1013;
+    public static final int REQUEST_RIDE_FAILED = 1014;
+
 }

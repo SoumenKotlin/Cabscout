@@ -35,4 +35,20 @@ public class Operations {
         return params;
     }
 
+    public static String requestRideTask(Context context, String customer_id, String pickup_location, String drop_location,
+                                          String vehicle_type, String src_latLng, String dest_latLng, String request_type,
+                                         String date, String time, String payment_type, String price) {
+
+        String params = Config.request_ride_url+"&customer_id="+customer_id+"&pickup_location="+pickup_location+
+                "&drop_location="+drop_location+"&vehicle_type="+vehicle_type+"&pickup_cordinates="+src_latLng+
+                "&drop_cordinates="+dest_latLng+"&request_type="+request_type+"&date="+date+"&time="+time+
+                "&payment_type="+payment_type+"&price="+price;
+
+        Log.e(TAG, "request_ride params-- "+ params);
+
+        return params;
+
+
+    }
+
 }

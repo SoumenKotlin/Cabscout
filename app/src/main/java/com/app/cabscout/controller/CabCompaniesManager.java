@@ -46,22 +46,26 @@ public class CabCompaniesManager {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray response = jsonObject.getJSONArray("response");
+            if (s != null) {
 
-                for (int i=0; i<response.length(); i++) {
-                    JSONObject jsonObject1 = response.getJSONObject(i);
-                    String company_id = jsonObject1.getString("company_id");
-                    String cab_alias = jsonObject1.getString("cab_alias");
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    JSONArray response = jsonObject.getJSONArray("response");
+
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject jsonObject1 = response.getJSONObject(i);
+                        String company_id = jsonObject1.getString("company_id");
+                        String cab_alias = jsonObject1.getString("cab_alias");
 
 
-                    cabCompaniesList.put(Integer.parseInt(company_id), cab_alias);
-                    EventBus.getDefault().post(new Event(Constants.CAB_COMPANIES_SUCCESS, company_id, cab_alias));
+                        cabCompaniesList.put(Integer.parseInt(company_id), cab_alias);
+                        EventBus.getDefault().post(new Event(Constants.CAB_COMPANIES_SUCCESS, company_id, cab_alias));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
 
         }

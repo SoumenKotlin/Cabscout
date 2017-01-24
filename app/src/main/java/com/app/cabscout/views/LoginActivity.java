@@ -98,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Intent i = new Intent(activity, MainActivity.class);
                 CSPreferences.putString(activity, "login_status", "true");
                 startActivity(i);
+                finish();
                 break;
             case Constants.ACCOUNT_NOT_REGISTERED:
                 Toast.makeText(activity, event.getValue(), Toast.LENGTH_SHORT).show();

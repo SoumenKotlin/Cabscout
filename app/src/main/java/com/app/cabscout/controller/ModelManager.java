@@ -13,6 +13,9 @@ public class ModelManager {
     private SearchAddressManager searchAddressManager;
     private LocationDirectionManager locationDirectionManager;
     private LocationService locationService;
+    private DateTimeManager dateTimeManager;
+    private RequestManager requestManager;
+
     private static ModelManager modelManager;
 
 
@@ -23,6 +26,8 @@ public class ModelManager {
         loginManager = new LoginManager();
         locationDirectionManager = new LocationDirectionManager();
         locationService = new LocationService();
+        dateTimeManager = new DateTimeManager();
+        requestManager = new RequestManager();
     }
 
     public static ModelManager getInstance() {
@@ -54,5 +59,13 @@ public class ModelManager {
 
     public LocationService getLocationService() {
         return locationService;
+    }
+
+    public DateTimeManager getDateTimeManager() {
+        return dateTimeManager;
+    }
+
+    public RequestManager getRequestManager() {
+        return requestManager;
     }
 }
