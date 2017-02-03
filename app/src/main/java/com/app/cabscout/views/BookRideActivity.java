@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +25,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -40,7 +39,7 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
     private static final String TAG = BookRideActivity.class.getSimpleName();
     Activity activity = this;
     Toolbar toolbar;
-    RelativeLayout cabSelectionLayout;
+    // RelativeLayout cabSelectionLayout;
     TextView pickupAddress, destinationAddress;
     String src_lat, src_lng, dest_lat, dest_lng;
     private GoogleMap gMap;
@@ -71,15 +70,15 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        View v = findViewById(R.id.cabBookLayout);
-        cabSelectionLayout = (RelativeLayout)v.findViewById(R.id.cabBookLayout);
+       // View v = findViewById(R.id.cabBookLayout);
+       // cabSelectionLayout = (RelativeLayout)v.findViewById(R.id.cabBookLayout);
 
-        pickupAddress = (TextView)cabSelectionLayout.findViewById(R.id.pickupAddress);
-        destinationAddress = (TextView)cabSelectionLayout.findViewById(R.id.dropAddress);
-        distance = (CustomTextViewBold)cabSelectionLayout.findViewById(R.id.distance);
+        pickupAddress = (TextView)findViewById(R.id.pickupAddress);
+        destinationAddress = (TextView)findViewById(R.id.dropAddress);
+        distance = (CustomTextViewBold)findViewById(R.id.distance);
 
-        pickupSearch = (CardView)cabSelectionLayout.findViewById(R.id.pickUpSearch);
-        dropSearch = (CardView)cabSelectionLayout.findViewById(R.id.dropSearch);
+        pickupSearch = (CardView)findViewById(R.id.pickUpSearch);
+        dropSearch = (CardView)findViewById(R.id.dropSearch);
         pickupSearch.setOnClickListener(this);
         dropSearch.setOnClickListener(this);
 
@@ -166,17 +165,24 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int j) {
-        double midLat = (Double.parseDouble(src_lat)+Double.parseDouble(dest_lat))/2;
-        double midLng = (Double.parseDouble(src_lng)+Double.parseDouble(dest_lng))/2;
+        /*double midLat = (Double.parseDouble(src_lat)+Double.parseDouble(dest_lat))/2;
+        double midLng = (Double.parseDouble(src_lng)+Double.parseDouble(dest_lng))/2;*/
 
-        CameraPosition position = CameraPosition.builder()
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(new LatLng(Double.parseDouble(src_lat), Double.parseDouble(src_lng)));
+        builder.include(new LatLng(Double.parseDouble(dest_lat), Double.parseDouble(dest_lng)));
+        LatLngBounds bounds = builder.build();
+        gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
+
+
+        /*CameraPosition position = CameraPosition.builder()
                 .target( new LatLng(midLat, midLng) )
                 .zoom( 13f )
                 .bearing( 0.0f )
                 .tilt( 0.0f )
                 .build();
 
-        gMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
+        gMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));*/
 
         if(polylines.size()>0) {
             for (Polyline poly : polylines) {
@@ -200,9 +206,11 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
 
             Log.e(TAG, "distance-- "+route.get(i).getDistanceValue());
             Log.e(TAG, "time-- "+route.get(i).getDurationValue());
-            float d = (route.get(i).getDistanceValue()) / 1000;
-            float dt = Utils.round(d, 1);
-            distance.setText(String.format("%s km", String.valueOf(dt)));
+            double d = (route.get(i).getDistanceValue()) / 1000;
+            d = Utils.convertKmToMi(d);
+            double dt = Utils.round(d, 1);
+
+            distance.setText(String.format("%s mi", String.valueOf(dt)));
             Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
         }
 

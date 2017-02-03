@@ -3,7 +3,7 @@ package com.app.cabscout.model;
 import android.content.Context;
 import android.util.Log;
 
-/**
+/*
  * Created by rishav on 17/1/17.
  */
 
@@ -35,6 +35,24 @@ public class Operations {
         return params;
     }
 
+    public static String facebookLoginTask(Context context, String fb_id) {
+        String params = Config.facebook_login_verify_url+fb_id;
+
+        Log.e(TAG, "login_verify params-- "+params);
+
+        return params;
+    }
+
+    public static String fbLoginParams(Context context, String company_id, String email, String password,
+                                       String name, String token, String mobile, String imageUrl, String fb_id) {
+        String params = Config.fb_login_url+company_id+"&email="+email+"&password="+password+"&name="+name
+                +"&device_token="+token+"&device_type=A"+"&mobile="+mobile+"&profileImage="+imageUrl+"&facebook_id="+fb_id;
+
+        Log.e(TAG, "fb_login params-- "+params);
+
+        return params;
+    }
+
     public static String requestRideTask(Context context, String customer_id, String pickup_location, String drop_location,
                                           String vehicle_type, String src_latLng, String dest_latLng, String request_type,
                                          String date, String time, String payment_type, String price) {
@@ -50,5 +68,62 @@ public class Operations {
 
 
     }
+
+    public static String getScheduledRides(Context context, String customer_id) {
+        String params = Config.schedule_history_url+customer_id;
+
+        Log.e(TAG, "scheduled_rides params-- "+params);
+
+        return params;
+    }
+
+    public static String getTripsHistory(Context context, String customer_id) {
+        String params = Config.trips_history_url+customer_id;
+
+        Log.e(TAG, "trips_history params-- "+params);
+
+        return params;
+    }
+
+    public static String updateHomeDetails(Context context, String latitude, String longitude,
+                                           String customer_id, String location) {
+
+        String params = Config.update_home_details_url+"&latitude="+latitude+"&longitude="+longitude+
+                "&customer_id="+customer_id+"&LocationName="+location;
+
+        Log.e(TAG, "update_home params-- "+ params);
+
+        return params;
+
+    }
+
+    public static String updateWorkDetails(Context context, String latitude, String longitude,
+                                           String customer_id, String location) {
+
+        String params = Config.update_work_details_url+"&latitude="+latitude+"&longitude="+longitude+
+                "&customer_id="+customer_id+"&LocationName="+location;
+
+        Log.e(TAG, "update_work params-- "+ params);
+
+        return params;
+
+    }
+
+    public static String updateProfileImage(Context context, String customer_id, String base64) {
+        String params = Config.update_profile_pic_url+customer_id+"&profile_pic="+base64;
+
+        Log.e(TAG, "update_image params-- "+params);
+
+        return params;
+    }
+
+    public static String getUserDetails(Context context, String customer_id) {
+        String params = Config.user_details_url+customer_id;
+
+        Log.e(TAG, "user_details url-- "+params);
+
+        return params;
+    }
+
 
 }

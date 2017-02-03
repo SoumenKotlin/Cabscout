@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_payment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.app.cabscout.model.custom.CustomTextViewBold
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payment Methods"
+            android:padding="20dp"
+            style="?android:attr/textAppearanceLarge"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <com.app.cabscout.model.custom.CustomTextViewRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="1.  Cash"
+            android:gravity="start|center"
+            android:padding="20dp"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <com.app.cabscout.model.custom.CustomTextViewRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2.  Corporate Account"
+            android:gravity="start|center"
+            android:padding="20dp"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <com.app.cabscout.model.custom.CustomTextViewRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3.  Credit Card"
+            android:gravity="start|center"
+            android:padding="20dp"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+    </LinearLayout>
+
+</LinearLayout>

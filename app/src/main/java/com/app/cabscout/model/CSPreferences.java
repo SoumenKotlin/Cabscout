@@ -3,7 +3,7 @@ package com.app.cabscout.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
+/*
  * Created by rishav on 18/1/17.
  */
 

@@ -10,11 +10,17 @@ public class ModelManager {
     private CabCompaniesManager cabCompaniesManager;
     private RegistrationManager registrationManager;
     private LoginManager loginManager;
+    private FacebookLoginManager facebookLoginManager;
     private SearchAddressManager searchAddressManager;
     private LocationDirectionManager locationDirectionManager;
     private LocationService locationService;
     private DateTimeManager dateTimeManager;
     private RequestManager requestManager;
+    private ScheduleHistoryManager scheduleHistoryManager;
+    private TripsHistoryManager tripsHistoryManager;
+    private AddHomeManager addHomeManager;
+    private AddWorkManager addWorkManager;
+    private ImageUploadManager imageUploadManager;
 
     private static ModelManager modelManager;
 
@@ -24,10 +30,16 @@ public class ModelManager {
         registrationManager = new RegistrationManager();
         searchAddressManager = new SearchAddressManager();
         loginManager = new LoginManager();
+        facebookLoginManager = new FacebookLoginManager();
         locationDirectionManager = new LocationDirectionManager();
         locationService = new LocationService();
         dateTimeManager = new DateTimeManager();
         requestManager = new RequestManager();
+        scheduleHistoryManager = new ScheduleHistoryManager();
+        tripsHistoryManager = new TripsHistoryManager();
+        addHomeManager = new AddHomeManager();
+        addWorkManager = new AddWorkManager();
+        imageUploadManager = new ImageUploadManager();
     }
 
     public static ModelManager getInstance() {
@@ -49,6 +61,10 @@ public class ModelManager {
         return loginManager;
     }
 
+    public FacebookLoginManager getFacebookLoginManager() {
+        return facebookLoginManager;
+    }
+
     public SearchAddressManager getSearchAddressManager() {
         return searchAddressManager;
     }
@@ -67,5 +83,25 @@ public class ModelManager {
 
     public RequestManager getRequestManager() {
         return requestManager;
+    }
+
+    public ScheduleHistoryManager getScheduleHistoryManager() {
+        return scheduleHistoryManager;
+    }
+
+    public TripsHistoryManager getTripsHistoryManager() {
+        return tripsHistoryManager;
+    }
+
+    public AddHomeManager getAddHomeManager() {
+        return addHomeManager;
+    }
+
+    public AddWorkManager getAddWorkManager() {
+        return addWorkManager;
+    }
+
+    public ImageUploadManager getImageUploadManager() {
+        return imageUploadManager;
     }
 }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp"
+    android:background="#EAEAEA">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <com.app.cabscout.model.custom.CustomTextViewBold
+                android:id="@+id/pickupAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pickup Location"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:drawableLeft="@drawable/ic_icon_location"
+                android:drawableStart="@drawable/ic_icon_location"
+                android:drawablePadding="10dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.app.cabscout.model.custom.CustomTextViewBold
+                android:id="@+id/dropAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Drop Location"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:drawableLeft="@drawable/ic_icon_destination"
+                android:drawableStart="@drawable/ic_icon_destination"
+                android:drawablePadding="10dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+            <com.app.cabscout.model.custom.CustomTextViewRegular
+                android:id="@+id/dateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:drawableLeft="@drawable/ic_icon_time"
+                android:drawableStart="@drawable/ic_icon_time"
+                android:drawablePadding="5dp"
+                android:text="Date: Jan,Tue 24 07:55 pm"/>
+
+            <com.app.cabscout.model.custom.CustomTextViewRegular
+                android:id="@+id/carName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Maruti Suzuki Swift"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <com.app.cabscout.model.custom.CustomTextViewRegular
+                    android:id="@+id/ridePrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_icon_price"
+                    android:drawableStart="@drawable/ic_icon_price"
+                    android:drawablePadding="5dp"
+                    android:text="Price: 100"/>
+
+                <com.app.cabscout.model.custom.CustomTextViewBold
+                    android:id="@+id/paymentType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:text="Pay Type"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

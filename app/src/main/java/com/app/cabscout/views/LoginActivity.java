@@ -1,6 +1,7 @@
 package com.app.cabscout.views;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,36 +17,49 @@ import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Operations;
 import com.app.cabscout.model.Utils;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
-    CircularProgressView progressView;
+    //CircularProgressView progressView;
     EditText editEmail, editPassword;
     String email, password;
-    TextView textLogin, createAccount;
+    TextView textLogin, createAccount, fbLogin;
     Activity activity = this;
+    Dialog dialog;
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_login);
 
         initViews();
     }
 
     public void initViews() {
-        progressView = (CircularProgressView)findViewById(R.id.progressView);
+        //progressView = (CircularProgressView)findViewById(R.id.progressView);
+
+        callbackManager = CallbackManager.Factory.create();
+
+        dialog = Utils.createDialog(activity);
         editEmail = (EditText)findViewById(R.id.editEmail);
         editPassword = (EditText)findViewById(R.id.editPassword);
         createAccount = (TextView)findViewById(R.id.createAccount);
+        fbLogin = (TextView)findViewById(R.id.fbLogin);
+
         createAccount.setOnClickListener(this);
 
         textLogin = (TextView)findViewById(R.id.textLogin);
         textLogin.setOnClickListener(this);
+        fbLogin.setOnClickListener(this);
     }
 
     @Override
@@ -56,6 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(i);
                 finish();
                 break;
+
             case R.id.textLogin:
                 email = editEmail.getText().toString();
                 password = editPassword.getText().toString();
@@ -67,10 +82,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(this, "Please enter the valid email address", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    progressView.setVisibility(View.VISIBLE);
+                    //progressView.setVisibility(View.VISIBLE);
+                    dialog.show();
                     ModelManager.getInstance().getLoginManager().doLogin(activity, Operations.loginTask(activity,
                             email, password, CSPreferences.readString(activity, "device_token")));
                 }
+                break;
+
+            case R.id.fbLogin:
+                ModelManager.getInstance().getFacebookLoginManager().doFacebookLogin(activity, callbackManager);
                 break;
         }
     }
@@ -91,7 +111,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Subscribe
     public void onEvent(Event event) {
-        progressView.setVisibility(View.GONE);
+        /*progressView.setVisibility(View.GONE);*/
+        dialog.dismiss();
         switch (event.getKey()) {
             case Constants.LOGIN_SUCCESS:
                 Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show();
@@ -103,6 +124,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case Constants.ACCOUNT_NOT_REGISTERED:
                 Toast.makeText(activity, event.getValue(), Toast.LENGTH_SHORT).show();
                 break;
+
+            case Constants.SERVER_ERROR:
+                Toast.makeText(activity, "Sorry, there is some error in our server. Please try after sometime.", Toast.LENGTH_SHORT).show();
+                break;
+
+            case Constants.FACEBOOK_LOGIN_SUCCESS:
+                Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                break;
+
+            case Constants.FACEBOOK_LOGIN_EMPTY:
+
+                Intent intent = new Intent(activity, LoginFacebookActivity.class);
+                startActivity(intent);
+
+                break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+         ModelManager.getInstance().getFacebookLoginManager().getFacebookData(activity);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(activity, CabCompaniesActivity.class);
+        startActivity(i);
+        finish();
     }
 }

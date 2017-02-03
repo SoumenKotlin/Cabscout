@@ -229,8 +229,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/promo_code_note"
                     android:textAllCaps="true"
+                    android:visibility="gone"
                     android:textSize="12sp"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:id="@+id/customTextViewRegular" />
 
             </LinearLayout>
 

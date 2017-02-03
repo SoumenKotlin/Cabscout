@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_profile"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,22 +22,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:layout_marginTop="50dp">
+                android:layout_marginTop="20dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@android:color/black"
-                    android:id="@+id/circleImageView" />
+                    android:src="@drawable/ic_icon_profile_pic"
+                    android:id="@+id/showImage" />
 
                 <ImageView
+                    android:id="@+id/updateImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_icon_edit_profile"
-                    android:id="@+id/imageView"
-                    android:layout_alignBottom="@+id/circleImageView"
-                    android:layout_alignRight="@+id/circleImageView"
-                    android:layout_alignEnd="@+id/circleImageView" />
+                    android:layout_alignBottom="@+id/showImage"
+                    android:layout_alignRight="@+id/showImage"
+                    android:layout_alignEnd="@+id/showImage" />
 
             </RelativeLayout>
 
@@ -87,6 +86,7 @@
                             android:textAllCaps="true"/>
 
                         <EditText
+                            android:id="@+id/editName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
@@ -96,7 +96,7 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+                   <!-- <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -120,7 +120,7 @@
                             android:textColor="@android:color/tertiary_text_dark"
                             android:text="Kumar"/>
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                 </LinearLayout>
 
@@ -133,9 +133,10 @@
                     android:textAllCaps="true"/>
 
                 <EditText
+                    android:id="@+id/editEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:enabled="false"
                     android:textColor="@android:color/tertiary_text_dark"
                     android:text="rishav@gmail.com"/>
@@ -163,6 +164,7 @@
                         android:text="91"/>
 
                     <EditText
+                        android:id="@+id/editPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -205,24 +207,28 @@
                     android:background="@android:color/darker_gray"/>
 
                 <com.app.cabscout.model.custom.CustomTextViewBold
-                    android:layout_width="wrap_content"
+                    android:id="@+id/addHome"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Add home"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:drawableLeft="@drawable/ic_icon_add"
                     android:drawableStart="@drawable/ic_icon_add"
                     android:drawablePadding="10dp"
-                    android:gravity="center"
-                    style="?android:attr/textAppearanceMedium"
+                    android:gravity="center|start"
+                    style="?android:attr/borderlessButtonStyle"
                     android:textAllCaps="true"/>
 
                 <LinearLayout
+                    android:id="@+id/layoutHome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:layout_gravity="center">
 
                     <com.app.cabscout.model.custom.CustomTextViewRegular
+                        android:id="@+id/homeLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#000000"
@@ -239,6 +245,7 @@
                         android:gravity="end">
 
                         <ImageView
+                            android:id="@+id/editHome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center|end"
@@ -247,6 +254,7 @@
                             android:src="@drawable/ic_icon_edit"/>
 
                         <ImageView
+                            android:id="@+id/deleteHome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_icon_delete"/>
@@ -262,24 +270,28 @@
                     android:background="@android:color/darker_gray"/>
 
                 <com.app.cabscout.model.custom.CustomTextViewBold
-                    android:layout_width="wrap_content"
+                    android:id="@+id/addWork"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Add Work"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:drawableLeft="@drawable/ic_icon_add"
                     android:drawableStart="@drawable/ic_icon_add"
                     android:drawablePadding="10dp"
-                    android:gravity="center"
-                    style="?android:attr/textAppearanceMedium"
+                    android:gravity="center|start"
+                    style="?android:attr/borderlessButtonStyle"
                     android:textAllCaps="true"/>
 
                 <LinearLayout
+                    android:id="@+id/layoutWork"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:layout_gravity="center">
 
                     <com.app.cabscout.model.custom.CustomTextViewRegular
+                        android:id="@+id/workLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#000000"
@@ -296,6 +308,7 @@
                         android:gravity="end">
 
                         <ImageView
+                            android:id="@+id/editWork"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center|end"
@@ -304,6 +317,7 @@
                             android:src="@drawable/ic_icon_edit"/>
 
                         <ImageView
+                            android:id="@+id/deleteWork"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_icon_delete"/>
@@ -318,4 +332,4 @@
 
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>

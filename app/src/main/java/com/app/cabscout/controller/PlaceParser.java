@@ -7,10 +7,14 @@ import android.util.Log;
 import com.app.cabscout.model.CSPreferences;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
+import com.app.cabscout.model.Operations;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /*
  * Created by rishav on 20/1/17.
@@ -40,7 +44,7 @@ public class PlaceParser {
             String place_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
 
             HttpHandler httpHandler = new HttpHandler();
-            String API_KEY = "AIzaSyAsE0edaQKl5wgqcfTibDmdUuHQgFEoldc";
+            String API_KEY = "AIzaSyCpxjdSXb9v61fadm7mUsmxrggE3KMCQD0";
             String json = httpHandler.makeServiceCall(place_url + params[0] + "&key=" + API_KEY);
 
             Log.w(TAG, "response-- " + json);
@@ -66,6 +70,10 @@ public class PlaceParser {
                 Log.e(TAG, "searched latitude-- " + latitude);
                 Log.e(TAG, "searched longitude-- " + longitude);
 
+                String customer_id = CSPreferences.readString(mContext, "customer_id");
+                String home_address = CSPreferences.readString(mContext, "add_home");
+                String work_address = CSPreferences.readString(mContext, "add_work");
+
                 switch (input) {
                     case "pickup":
                         CSPreferences.putString(mContext, "source_latitude", latitude);
@@ -84,6 +92,23 @@ public class PlaceParser {
                         CSPreferences.putString(mContext, "destination_longitude", longitude);
                         EventBus.getDefault().post(new Event(Constants.DESTINATION_SUCCESS, ""));
 
+                        break;
+                    case "home":
+                        try {
+                            ModelManager.getInstance().getAddHomeManager().addHomeLocation(mContext, Operations.updateHomeDetails(mContext,
+                                    latitude, longitude, customer_id, URLEncoder.encode(home_address, "utf-8")));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
+                    case "work":
+                        try {
+                            ModelManager.getInstance().getAddWorkManager().addWorkLocation(mContext, Operations.updateWorkDetails(mContext,
+                                    latitude, longitude, customer_id, URLEncoder.encode(work_address, "utf-8")));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                         break;
                 }
 

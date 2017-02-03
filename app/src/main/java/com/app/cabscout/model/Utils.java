@@ -4,13 +4,25 @@ package com.app.cabscout.model;
  * Created by rishav on 18/1/17.
  */
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
+import android.view.Window;
+import android.widget.TextView;
 
+import com.app.cabscout.R;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -22,7 +34,6 @@ import java.util.regex.Pattern;
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
-    private static String API_KEY = "AIzaSyDW4hwt4oKL-B64uDuwZ3LwEsoBLEcHwgw";
 
     public static boolean emailValidator(String email) {
         Pattern pattern;
@@ -45,10 +56,10 @@ public class Utils {
               /*  for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                     strReturnedAddress.append(returnedAddress.getAddressLine(i));
                 }*/
-                strReturnedAddress.append(returnedAddress.getAddressLine(0)).append(", ");
+                strReturnedAddress.append(returnedAddress.getAddressLine(0));
 
                 if (returnedAddress.getSubLocality() != null)
-                    strReturnedAddress.append(returnedAddress.getSubLocality());
+                    strReturnedAddress.append(", ").append(returnedAddress.getSubLocality());
 
                 strAdd = strReturnedAddress.toString();
                 Log.e(TAG, "Current address-- "+strReturnedAddress.toString());
@@ -70,7 +81,8 @@ public class Utils {
         String str_dest = "destination="+dest.latitude+","+dest.longitude;
 
         // Sensor enabled
-        String key = "key="+API_KEY;
+        String API_KEY = "AIzaSyCpxjdSXb9v61fadm7mUsmxrggE3KMCQD0";
+        String key = "key="+ API_KEY;
 
         // Building the parameters to the web service
         String parameters = str_origin+"&"+str_dest+"&"+key;
@@ -82,12 +94,6 @@ public class Utils {
         String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
 
         return url;
-    }
-
-    public static float round(float d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
     }
 
     public static String dateConverter(int year, int monthOfYear, int dayOfMonth) {
@@ -204,6 +210,99 @@ public class Utils {
         }
 
         return time;
+    }
+
+    public static double round(double d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Double.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        Log.e(TAG, "distance round up-- "+bd.doubleValue());
+        return bd.doubleValue();
+    }
+
+    public static double convertKmToMi(double kilometers) {
+        // Assume there are 0.621 miles in a kilometer.
+        double miles = kilometers * 0.621;
+        Log.e(TAG, "distance im miles-- "+miles);
+        return miles;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static Dialog createDialog(Context context) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        return dialog;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static Dialog customProgressDialog(Context context, String message) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_progress_dialog);
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        TextView customMessage = (TextView)dialog.findViewById(R.id.customMessage);
+        customMessage.setText(message);
+
+        return dialog;
+    }
+
+    public static String base64Encode(Bitmap bm) {
+
+        //Bitmap bm = BitmapFactory.decodeFile(picturePath);
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 90, bao);
+        byte[] ba = bao.toByteArray();
+        String ba1 = Base64.encodeToString(ba, Base64.DEFAULT);
+
+        Log.e("base64", "-----" + ba1);
+
+        return ba1;
+    }
+
+    public Bitmap base64decode(String base64) {
+        try {
+            byte[] encodeByte = Base64.decode(base64, Base64.DEFAULT);
+            Bitmap bitmap;
+            bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public static void openCamera(Activity context) {
+
+        // Check Camera
+       /* if (context.getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA)) {
+            // Open default camera
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+            // start the image capture Intent
+            context.startActivityForResult(intent, 100);
+
+        } else {
+            Toast.makeText(context, "Camera not supported", Toast.LENGTH_LONG).show();
+        }*/
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivityForResult(takePictureIntent, 100);
+        }
+    }
+
+    public static void openGallery(Activity context) {
+
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        context.startActivityForResult(galleryIntent, 200);
     }
 
 }

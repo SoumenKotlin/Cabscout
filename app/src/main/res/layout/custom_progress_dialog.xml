@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    android:background="@android:color/transparent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+
+            <com.github.silvestrpredko.dotprogressbar.DotProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                app:amount="5"
+                android:background="@android:color/transparent"
+                app:startColor="@color/colorPrimary"
+                app:endColor="@color/colorPrimary"
+                app:animationDirection="right"
+                android:padding="20dp"
+                app:duration="@android:integer/config_shortAnimTime"
+                android:id="@+id/dot_progress_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.app.cabscout.model.custom.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please wait..."
+                android:gravity="center"
+                android:layout_gravity="center"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:padding="20dp"/>
+
+            <com.app.cabscout.model.custom.CustomTextViewRegular
+                android:id="@+id/customMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Processing your request..."
+                android:gravity="center"
+                android:layout_gravity="center"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:paddingBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

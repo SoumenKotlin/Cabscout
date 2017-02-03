@@ -12,7 +12,7 @@ public class ExtraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cab_selection_layout);
+        setContentView(R.layout.custom_dialog);
 
     }
 }

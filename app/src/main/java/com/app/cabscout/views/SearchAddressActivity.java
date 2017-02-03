@@ -76,7 +76,6 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(activity, recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -106,6 +105,22 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
 
                         CSPreferences.putString(activity, "drop_address", searchAddressBeans.getAddress());
 
+                        break;
+                    }
+
+                    case "Add Home": {
+                        PlaceParser placeParser = new PlaceParser();
+                        placeParser.getAddress(activity, placeIdList.get(position), "home");
+
+                        CSPreferences.putString(activity, "add_home", searchAddressBeans.getAddress());
+                        break;
+                    }
+
+                    case "Add Work": {
+                        PlaceParser placeParser = new PlaceParser();
+                        placeParser.getAddress(activity, placeIdList.get(position), "work");
+
+                        CSPreferences.putString(activity, "add_work", searchAddressBeans.getAddress());
                         break;
                     }
                 }
@@ -183,6 +198,14 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case Constants.DESTINATION_RIDE_SUCCESS:
+                finish();
+                break;
+
+            case Constants.ADD_HOME_SUCCESS:
+                finish();
+                break;
+
+            case Constants.ADD_WORK_SUCCESS:
                 finish();
                 break;
 

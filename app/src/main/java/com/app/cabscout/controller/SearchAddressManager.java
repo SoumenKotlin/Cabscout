@@ -27,7 +27,7 @@ public class SearchAddressManager {
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
-    private static String API_KEY = "AIzaSyDW4hwt4oKL-B64uDuwZ3LwEsoBLEcHwgw";
+    private static String API_KEY = "AIzaSyCpxjdSXb9v61fadm7mUsmxrggE3KMCQD0";
 
     public static ArrayList<String> placeIdList;
     public static ArrayList<SearchAddressBeans> addressList;

@@ -28,7 +28,7 @@ public class SearchAddressAdapter extends RecyclerView.Adapter<SearchAddressAdap
 
     @Override
     public SearchAddressAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.search_results, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.view_places_search, parent, false);
         return new ViewHolder(view);
     }
 
@@ -52,6 +52,7 @@ public class SearchAddressAdapter extends RecyclerView.Adapter<SearchAddressAdap
 
      class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textAddress, textArea;
+
          ViewHolder(View itemView) {
             super(itemView);
 

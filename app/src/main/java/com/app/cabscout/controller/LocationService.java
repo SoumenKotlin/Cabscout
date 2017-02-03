@@ -1,38 +1,62 @@
 package com.app.cabscout.controller;
 
 import android.Manifest;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-import static android.content.Context.LOCATION_SERVICE;
+import com.app.cabscout.model.Constants;
+import com.app.cabscout.model.Event;
+
+import org.greenrobot.eventbus.EventBus;
 
 /*
  * Created by rishav on 23/1/17.
  */
 
-public class LocationService implements LocationListener {
+public class LocationService extends Service implements LocationListener {
 
     private static final String TAG = LocationService.class.getSimpleName();
 
     public static Location location; // location
     public double latitude, longitude;
+    private LocationManager locationManager;
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000*5 ; // 1 minute
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        getLocation(getApplicationContext());
+        Intent broadcastIntent =  new Intent("com.app.cabscout.DATA");
+        getApplicationContext().sendBroadcast(broadcastIntent);
+        Log.e(TAG, "Service started");
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     public Location getLocation(Context mContext) {
-     //   context = mContext;
+          // context = mContext;
         try {
-            LocationManager locationManager = (LocationManager) mContext
+            locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
@@ -47,7 +71,7 @@ public class LocationService implements LocationListener {
                 // no network provider is enabled
                 Log.e(TAG, "No provider");
             } else {
-               // this.canGetLocation = true;
+                // this.canGetLocation = true;
                 // First get location from Network Provider
 
                 if (isNetworkEnabled) {
@@ -73,7 +97,7 @@ public class LocationService implements LocationListener {
                         longitude = location.getLongitude();
                         Log.e(TAG, "lat-- " + latitude);
                     }
-                    locationManager.removeUpdates(this);
+                  /*  locationManager.removeUpdates(this);*/
                 }
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
@@ -94,7 +118,7 @@ public class LocationService implements LocationListener {
                     }
                 }
 
-                locationManager.removeUpdates(this);
+              /*  locationManager.removeUpdates(this);*/
             }
 
         } catch (Exception e) {
@@ -104,11 +128,45 @@ public class LocationService implements LocationListener {
         return location;
     }
 
+    public void stopGPS(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.removeUpdates(this);
+    }
+
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location loc) {
+
+        Log.e(TAG, "Location changing");
+
+        if (loc != null) {
+            location = loc;
+
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+
+            EventBus.getDefault().post(new Event(Constants.LOCATION_SUCCESS, lat, lng));
+
+            /*Intent intent =  new Intent("com.app.cabscout.DATA");
+            intent.putExtra("Latitude", lat);
+            intent.putExtra("Longitude", lng);
+            getApplicationContext().sendBroadcast(intent);*/
+        }
 
     }
+
+
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
@@ -123,5 +181,12 @@ public class LocationService implements LocationListener {
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Log.e(TAG, "Service Destroyed");
     }
 }

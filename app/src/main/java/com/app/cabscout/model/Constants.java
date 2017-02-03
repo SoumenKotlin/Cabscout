@@ -1,6 +1,6 @@
 package com.app.cabscout.model;
 
-/**
+/*
  * Created by rishav on 17/1/17.
  */
 
@@ -24,5 +24,22 @@ public class Constants {
 
     public static final int REQUEST_RIDE_SUCCESS = 1013;
     public static final int REQUEST_RIDE_FAILED = 1014;
+
+    public static final int SCHEDULED_HISTORY_SUCCESS = 1015;
+    public static final int SCHEDULED_HISTORY_EMPTY = 1016;
+
+    public static final int ADD_HOME_SUCCESS = 1017;
+    public static final int ADD_WORK_SUCCESS= 1018;
+
+    public static final int LOCATION_SUCCESS = 1019;
+
+    public static final int TRIPS_HISTORY_SUCCESS = 1020;
+    public static final int TRIPS_HISTORY_EMPTY = 1021;
+
+    public static final int UPLOAD_IMAGE_SUCCESS = 1023;
+    public static final int UPLOAD_IMAGE_FAILED = 1024;
+
+    public static final int FACEBOOK_LOGIN_SUCCESS = 1025;
+    public static final int FACEBOOK_LOGIN_EMPTY = 1026;
 
 }

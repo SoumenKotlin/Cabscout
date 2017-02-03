@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -18,7 +19,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -31,6 +31,8 @@ import android.widget.TextView;
 import com.app.cabscout.R;
 import com.app.cabscout.controller.LocationService;
 import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Constants;
+import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,6 +44,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -61,8 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     LatLng latLng;
 
     ImageView imageMarker;
-    TextView scheduleRide, pickupAddress, dropAddress;
-    CardView pickupSearch, dropSearch;
+    FloatingActionButton currentLocationButton;
+    TextView pickupAddress, dropAddress;
+    CardView scheduleRide, selectedCabLayout, pickupSearch, dropSearch;
     RelativeLayout cabSelectionLayout;
     ImageView anyCab, regularCab, deluxeCab;
     private int STORAGE_PERMISSION_CODE = 23;
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //constant for defining the time duration between the click that can be considered as double-tap
     static final int MAX_DURATION = 200;
     RelativeLayout timeLayout;
+    Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void initViews() {
+        startService();
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -97,9 +105,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Manifest.permission.ACCESS_COARSE_LOCATION}, STORAGE_PERMISSION_CODE);
 
         imageMarker = (ImageView)findViewById(R.id.marker);
-        scheduleRide = (TextView)findViewById(R.id.scheduleRide);
+        scheduleRide = (CardView)findViewById(R.id.scheduleRide);
+        selectedCabLayout = (CardView)findViewById(R.id.selectedCabLayout);
 
         scheduleRide.setOnClickListener(this);
+        selectedCabLayout.setOnClickListener(this);
+
         View v = findViewById(R.id.cabSelectionLayout);
         cabSelectionLayout = (RelativeLayout)v.findViewById(R.id.cabSelectionLayout);
 
@@ -112,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         anyCab = (ImageView)cabSelectionLayout.findViewById(R.id.anyCab);
         regularCab = (ImageView)cabSelectionLayout.findViewById(R.id.regularCab);
         deluxeCab = (ImageView)cabSelectionLayout.findViewById(R.id.deluxeCab);
+        currentLocationButton = (FloatingActionButton) cabSelectionLayout.findViewById(R.id.currentLocation);
+        currentLocationButton.setOnClickListener(this);
 
         timeLayout = (RelativeLayout)findViewById(R.id.timeLayout);
 
@@ -134,9 +147,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onClick(View view) {
         switch (view.getId()) {
 
+            case R.id.currentLocation:
+                currentLocationButton.setVisibility(View.GONE);
+                initCamera(mLastLocation);
+                startService();
+                break;
+
             case R.id.scheduleRide:
                 Intent scheduleIntent = new Intent(activity, ScheduleActivity.class);
                 startActivity(scheduleIntent);
+                break;
+
+            case R.id.selectedCabLayout:
                 break;
 
             case R.id.pickUpSearch:
@@ -198,19 +220,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-        @Override
+    @Override
     public void onConnected(@Nullable Bundle bundle) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
 
 
@@ -243,17 +265,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public void startService() {
+
+
+        serviceIntent = new Intent(activity, LocationService.class);
+        startService(serviceIntent);
+    }
+
+    public void stopService() {
+
+
+        serviceIntent = new Intent(activity, LocationService.class);
+        stopService(serviceIntent);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+
+        EventBus.getDefault().unregister(this);
+
         if (mGoogleApiClient!=null && mGoogleApiClient.isConnected()){
             mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Event event) {
+        switch (event.getKey()) {
+
+            case Constants.LOCATION_SUCCESS:
+                getLocation(event.getLatitude(), event.getLongitude());
+                break;
         }
     }
 
@@ -261,16 +312,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         double lat, lng;
 
-        if (mLocation == null) {
-            mLocation = LocationService.location;
-        }
+        LocationService locationService = new LocationService();
+
+        if (mLocation == null)
+
+            mLocation = locationService.getLocation(activity);
+
 
         Log.e(TAG, "current location---"+ mLocation);
 
         CameraPosition position;
 
         if (mLocation != null) {
-             position = CameraPosition.builder()
+            position = CameraPosition.builder()
                     .target(new LatLng(mLocation.getLatitude(),
                             mLocation.getLongitude()))
                     .zoom(16f)
@@ -294,11 +348,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             lng = 76.692349;
         }
 
-
-       // googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-        googleMap.setPadding(0, dpToPx(48), 0, 0);
 
         latLng = new LatLng(lat, lng);
 
@@ -312,20 +362,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
 
 
-        googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+        googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
-            public void onCameraMoveStarted(int i) {
+            public void onCameraMove() {
+                currentLocationButton.setVisibility(View.VISIBLE);
+
+                stopService();
 
                 latLng = googleMap.getCameraPosition().target;
+                zoomLevel = googleMap.getCameraPosition().zoom;
 
                 timeLayout.setVisibility(View.GONE);
-
             }
         });
 
         googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
+                zoomLevel = googleMap.getCameraPosition().zoom;
+
                 latLng = googleMap.getCameraPosition().target;
 
                 CSPreferences.putString(activity, "source_latitude", String.valueOf(latLng.latitude));
@@ -416,10 +471,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case MotionEvent.ACTION_DOWN:
                 fingers = 1;
-                if(System.currentTimeMillis() - startTime <= MAX_DURATION)
-                {
+                if(System.currentTimeMillis() - startTime <= MAX_DURATION) {
                     Log.e(TAG, "Double tapped");
-                    googleMap.getUiSettings().setScrollGesturesEnabled(false);
+                    zoomLevel++;
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,
+                            zoomLevel));
+                    googleMap.getUiSettings().setZoomGesturesEnabled(false);
 
                 }
 
@@ -439,11 +496,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public int dpToPx(int dp) {
+   /* public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-    }
-
+    } */
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -499,12 +555,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-            if (CSPreferences.readString(activity, "pickup_address").isEmpty())
-                dropSearch.setVisibility(View.GONE);
         initCamera(mLastLocation);
 
         this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-   //     this.googleMap.setMyLocationEnabled(true);
+        //     this.googleMap.setMyLocationEnabled(true);
     }
 
     @Override
@@ -539,9 +593,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.schedule_ride:
+                Intent scheduledIntent = new Intent(activity, ScheduledHistoryActivity.class);
+                startActivity(scheduledIntent);
+                break;
+
+            case R.id.help:
+                Intent helpIntent = new Intent(activity, HelpActivity.class);
+                startActivity(helpIntent);
+                break;
+
+            case R.id.history:
+                Intent historyIntent = new Intent(activity, TripsHistoryActivity.class);
+                startActivity(historyIntent);
+                break;
+
+            case R.id.payment:
+                Intent paymentIntent = new Intent(activity, PaymentActivity.class);
+                startActivity(paymentIntent);
                 break;
         }
         return true;
     }
+
+    public void getLocation(double latitude, double longitude) {
+
+        CameraPosition position = CameraPosition.builder()
+                .target(new LatLng(latitude, longitude))
+                .zoom(zoomLevel)
+                .bearing(0.0f)
+                .tilt(0.0f)
+                .build();
+
+        if (googleMap != null)
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
+
+    }
+
 
 }

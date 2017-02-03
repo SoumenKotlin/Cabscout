@@ -1,18 +1,22 @@
 package com.app.cabscout.views;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.cabscout.R;
 import com.app.cabscout.controller.CabCompaniesManager;
@@ -30,6 +34,7 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
     private final String TAG = CabCompaniesActivity.class.getSimpleName();
     Activity activity = this;
     Toolbar toolbar;
+    RelativeLayout relativeLayout;
     TextView next_register, selectCab;
     BottomSheetDialog bottomSheetDialog;
     ArrayList<String> cabCompaniesList;
@@ -54,6 +59,7 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
         toolbar.setTitle("Create Account");
         setSupportActionBar(toolbar);
 
+        relativeLayout = (RelativeLayout)findViewById(R.id.activity_cab_companies);
         next_register = (TextView)findViewById(R.id.next_register);
         selectCab = (TextView)findViewById(R.id.selectCab);
         alreadyAccount = (TextView)findViewById(R.id.alreadyAccount);
@@ -64,10 +70,20 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
         bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet);
 
+        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog
+                        .findViewById(android.support.design.R.id.design_bottom_sheet);
+                assert bottomSheet != null;
+                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
         listView = (ListView)bottomSheetDialog.findViewById(R.id.listView);
         cabCompaniesList = new ArrayList<>();
         cabIdList = new ArrayList<>();
-
 
         for (Map.Entry<Integer,String> entry : CabCompaniesManager.cabCompaniesList.entrySet()) {
             Log.e(TAG, "cab id--"+ entry.getKey());
@@ -97,11 +113,12 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
             case R.id.alreadyAccount:
                 Intent intent = new Intent(activity, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
 
             case R.id.next_register:
                 if (selected_cab.isEmpty())
-                    Toast.makeText(activity, "Please select your cab company", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(relativeLayout, "Please select your cab company", Snackbar.LENGTH_LONG).show();
                 else {
                     Intent i = new Intent(activity, RegistrationActivity.class);
                     i.putExtra("cab_id", String.valueOf(cab_id));

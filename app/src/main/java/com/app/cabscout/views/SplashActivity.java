@@ -8,6 +8,7 @@ import android.content.IntentSender;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -70,8 +71,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             @Override
             public void run() {
 
-                ModelManager.getInstance().getLocationService().getLocation(activity);
-
                 CSPreferences.putString(activity, "pickup_address", "");
                 CSPreferences.putString(activity, "drop_address", "");
 
@@ -106,7 +105,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
-                        public void onConnectionFailed(ConnectionResult connectionResult) {
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
                             Log.e("Location error ", "" + connectionResult.getErrorCode());
                         }
@@ -126,15 +125,14 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                     LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
             result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
                 @Override
-                public void onResult(LocationSettingsResult result) {
+                public void onResult(@NonNull LocationSettingsResult result) {
                     final Status status = result.getStatus();
                     switch (status.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             try {
                                 // Show the dialog by calling startResolutionForResult(),
                                 // and check the result in onActivityResult().
-                                status.startResolutionForResult(
-                                        (Activity) SplashActivity.this, REQUEST_LOCATION);
+                                status.startResolutionForResult(SplashActivity.this, REQUEST_LOCATION);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.
                             }
