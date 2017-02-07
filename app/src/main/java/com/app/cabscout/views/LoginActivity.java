@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.app.cabscout.R;
 import com.app.cabscout.controller.ModelManager;
 import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Config;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Operations;
@@ -26,6 +27,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
     //CircularProgressView progressView;
     EditText editEmail, editPassword;
     String email, password;
@@ -84,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else {
                     //progressView.setVisibility(View.VISIBLE);
                     dialog.show();
-                    ModelManager.getInstance().getLoginManager().doLogin(activity, Operations.loginTask(activity,
+                    ModelManager.getInstance().getLoginManager().doLogin(activity, Config.login_url, Operations.loginTask(activity,
                             email, password, CSPreferences.readString(activity, "device_token")));
                 }
                 break;
@@ -115,11 +117,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.dismiss();
         switch (event.getKey()) {
             case Constants.LOGIN_SUCCESS:
-                Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(activity, MainActivity.class);
-                CSPreferences.putString(activity, "login_status", "true");
-                startActivity(i);
-                finish();
+                launchActivity();
                 break;
             case Constants.ACCOUNT_NOT_REGISTERED:
                 Toast.makeText(activity, event.getValue(), Toast.LENGTH_SHORT).show();
@@ -130,16 +128,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case Constants.FACEBOOK_LOGIN_SUCCESS:
-                Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                launchActivity();
                 break;
 
             case Constants.FACEBOOK_LOGIN_EMPTY:
-
                 Intent intent = new Intent(activity, LoginFacebookActivity.class);
                 startActivity(intent);
-
                 break;
         }
+    }
+
+    public void launchActivity() {
+        Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(activity, MainActivity.class);
+        CSPreferences.putString(activity, "login_status", "true");
+        startActivity(i);
+        finish();
     }
 
     @Override
@@ -147,7 +151,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
-         ModelManager.getInstance().getFacebookLoginManager().getFacebookData(activity);
+        if (resultCode == RESULT_OK) {
+            dialog.show();
+            ModelManager.getInstance().getFacebookLoginManager().getFacebookData(activity);
+        }
+
     }
 
     @Override

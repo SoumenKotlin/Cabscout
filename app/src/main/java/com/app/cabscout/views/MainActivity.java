@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.app.cabscout.R;
 import com.app.cabscout.controller.LocationService;
 import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Config;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Utils;
@@ -44,9 +45,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
@@ -197,6 +201,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        String profile_pic = CSPreferences.readString(this, "profile_pic");
+        View header = navigationView.getHeaderView(0);
+
+        TextView customerName = (TextView)header.findViewById(R.id.customerName);
+        CircleImageView customerImage = (CircleImageView)header.findViewById(R.id.nav_image);
+
+        customerName.setText(CSPreferences.readString(activity, "user_name"));
+        if (!profile_pic.startsWith("http")) {
+            profile_pic = Config.user_pic_url+profile_pic;
+        }
+
+        Picasso.with(this)
+                .load(profile_pic)
+                .placeholder(R.drawable.ic_icon_profile_pic)
+                .into(customerImage);
+
+        Log.e(TAG, "profile_pic url-- "+profile_pic);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
             @Override

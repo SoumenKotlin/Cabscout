@@ -1,8 +1,10 @@
 package com.app.cabscout.views;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,19 +19,34 @@ import android.widget.Toast;
 
 import com.app.cabscout.R;
 import com.app.cabscout.controller.CabCompaniesManager;
+import com.app.cabscout.controller.ModelManager;
 import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Config;
+import com.app.cabscout.model.Constants;
+import com.app.cabscout.model.Event;
+import com.app.cabscout.model.Operations;
+import com.app.cabscout.model.Utils;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 public class LoginFacebookActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = LoginFacebookActivity.class.getSimpleName();
+    Activity activity = this;
     EditText editCompany, editName, editEmail, editPhone;
     String name, email, phone, company;
     TextView textRegister;
     LinearLayout linearLayout;
     TextInputLayout textInputCompany;
     boolean isCompany;
+    String company_id, device_token, profile_pic, fb_id;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +64,14 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        device_token = CSPreferences.readString(activity, "device_token");
+
+        if (device_token.isEmpty()) {
+            device_token = FirebaseInstanceId.getInstance().getToken();
+        }
+
+        dialog = Utils.createDialog(this);
 
         editCompany = (EditText) findViewById(R.id.editCompanyName);
         editName = (EditText) findViewById(R.id.editName);
@@ -94,25 +119,83 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.textRegister:
-                name = editName.getText().toString();
-                email = editEmail.getText().toString();
-                phone = editPhone.getText().toString();
-                company = editCompany.getText().toString();
+                name = editName.getText().toString().trim();
+                email = editEmail.getText().toString().trim();
+                phone = editPhone.getText().toString().trim();
+                company = editCompany.getText().toString().trim();
+                profile_pic = CSPreferences.readString(activity, "profile_pic");
+
+                fb_id = CSPreferences.readString(activity, "fb_id");
 
                 if (company.isEmpty() || name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-                    Snackbar.make(linearLayout, "Please fill all the details", Snackbar.LENGTH_LONG).show();
+                    Utils.makeSnackBar(activity, linearLayout, "Please fill all the details");
                     return;
+                } else if (!Utils.emailValidator(email)) {
+                    Utils.makeSnackBar(activity, linearLayout, "Please enter the valid email address");
                 }
 
                 for (Map.Entry<Integer, String> entry : CabCompaniesManager.cabCompaniesList.entrySet()) {
-
                     if (CabCompaniesManager.cabCompaniesList.containsValue(company)) {
-                        Toast.makeText(this, "Ok", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Noooooooo", Toast.LENGTH_SHORT).show();
-                    }
+                        company_id = String.valueOf(entry.getKey());
+                        isCompany = true;
 
+                    }
+                    else {
+                        isCompany = false;
+                    }
                 }
+
+                if (isCompany) {
+                    dialog.show();
+
+                    try {
+                        ModelManager.getInstance().getFacebookLoginManager().registerUser(activity, Config.fb_login_url, Operations.fbLoginParams(activity,
+                                company_id, email, URLEncoder.encode(name, "utf-8"), device_token, phone, profile_pic, fb_id));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    Utils.makeSnackBar(activity, linearLayout, "Please enter the valid company code");
+                }
+
+                break;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(Event event) {
+        dialog.dismiss();
+        switch (event.getKey()) {
+            case Constants.FACEBOOK_LOGIN_SUCCESS:
+                Toast.makeText(activity, "Logged-in successfully", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(activity, MainActivity.class);
+                CSPreferences.putString(activity, "login_status", "true");
+                startActivity(i);
+                finish();
+                break;
+
+            case Constants.ALREADY_REGISTERED:
+                Utils.makeSnackBar(activity, linearLayout, "Sorry, this email is already in use. Please try with another email.");
+
+                break;
+
+            case Constants.SERVER_ERROR:
+                Utils.makeSnackBar(activity, linearLayout, "Sorry, server error occurred. Please try after sometime.");
 
                 break;
         }

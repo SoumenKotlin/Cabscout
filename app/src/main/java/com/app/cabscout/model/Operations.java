@@ -3,6 +3,9 @@ package com.app.cabscout.model;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /*
  * Created by rishav on 17/1/17.
  */
@@ -43,14 +46,37 @@ public class Operations {
         return params;
     }
 
-    public static String fbLoginParams(Context context, String company_id, String email, String password,
+    public static String fbLoginParams(Context context, String company_id, String email,
                                        String name, String token, String mobile, String imageUrl, String fb_id) {
-        String params = Config.fb_login_url+company_id+"&email="+email+"&password="+password+"&name="+name
-                +"&device_token="+token+"&device_type=A"+"&mobile="+mobile+"&profileImage="+imageUrl+"&facebook_id="+fb_id;
+        /*String params = Config.fb_login_url+company_id+"&email="+email+"&password=WJBJvfHTRNT"+"&name="+name
+                +"&device_token="+token+"&device_type=A"+"&mobile="+mobile+"&profileImage="+imageUrl+"&facebook_id="+fb_id;*/
 
-        Log.e(TAG, "fb_login params-- "+params);
+       try {
+           JSONObject postDataParams = new JSONObject();
+           postDataParams.put("company_id", company_id);
+           postDataParams.put("email", email);
+           postDataParams.put("password", "welcomeUser");
+           postDataParams.put("name", name);
+           postDataParams.put("device_token", token);
+           postDataParams.put("device_type", "A");
+           postDataParams.put("mobile", mobile);
+           postDataParams.put("profileImage", imageUrl);
+           postDataParams.put("facebook_id", fb_id);
 
-        return params;
+           String params = null;
+           try {
+               params = Utils.getPostDataString(postDataParams);
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+      //     Log.e(TAG, "fb_login params-- "+params);
+
+           return params;
+
+       } catch (JSONException e) {
+           e.printStackTrace();
+       }
+      return null;
     }
 
     public static String requestRideTask(Context context, String customer_id, String pickup_location, String drop_location,

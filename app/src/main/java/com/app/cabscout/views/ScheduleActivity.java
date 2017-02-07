@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -223,7 +222,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
                 + CSPreferences.readString(activity, "destination_longitude");
 
         if (pickup_address.isEmpty() || drop_address.isEmpty() || date.isEmpty() || time.isEmpty()) {
-            Snackbar.make(relativeLayout, "Please fill all the details", Snackbar.LENGTH_LONG).show();
+            Utils.makeSnackBar(activity, relativeLayout, "Please fill all the details");
             return;
         }
 

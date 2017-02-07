@@ -20,8 +20,8 @@ import org.json.JSONObject;
 public class LoginManager {
     private static final String TAG = LoginManager.class.getSimpleName();
 
-    public void doLogin(Context context, String params) {
-        new ExecuteApi(context).execute(params);
+    public void doLogin(Context context, String url, String params) {
+        new ExecuteApi(context).execute(url, params);
     }
 
     private class ExecuteApi extends AsyncTask<String, String, String> {
@@ -34,8 +34,8 @@ public class LoginManager {
         @Override
         protected String doInBackground(String... strings) {
             HttpHandler httpHandler = new HttpHandler();
-            String response = httpHandler.makeServiceCall(strings[0]);
-
+            String response = httpHandler.getResponse(strings[0], strings[1]);
+         //   String response = httpHandler.makeServiceCall(strings[0]);
             Log.e(TAG, "login response--" +response);
 
             return response;

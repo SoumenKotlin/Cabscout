@@ -52,7 +52,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".views.LoginFacebookActivity"></activity>
+        <activity android:name=".views.LoginFacebookActivity"/>
     </application>
 
 </manifest>

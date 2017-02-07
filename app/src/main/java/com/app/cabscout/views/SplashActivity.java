@@ -131,7 +131,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             try {
                                 // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
+                                // and check the result in onActivityResult()
                                 status.startResolutionForResult(SplashActivity.this, REQUEST_LOCATION);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.
@@ -161,7 +161,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 }
                 break;
         }
-
     }
 
     @Override

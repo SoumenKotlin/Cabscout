@@ -90,9 +90,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         showImage = (CircleImageView) findViewById(R.id.showImage);
         updateImage = (ImageView) findViewById(R.id.updateImage);
 
+        if (!profile_pic.startsWith("http")) {
+            profile_pic = Config.user_pic_url+profile_pic;
+        }
+
         if (!profile_pic.isEmpty()) {
             Picasso.with(activity)
-                    .load(Config.user_pic_url + profile_pic)
+                    .load(profile_pic)
                     .placeholder(R.drawable.ic_icon_profile_pic)
                     .into(showImage);
         }
