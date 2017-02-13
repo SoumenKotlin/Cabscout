@@ -34,7 +34,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Please wait..."
@@ -43,7 +43,7 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 android:padding="20dp"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/customMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

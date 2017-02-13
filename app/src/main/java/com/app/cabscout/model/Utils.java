@@ -7,6 +7,7 @@ package com.app.cabscout.model;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,11 +16,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.provider.MediaStore;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.app.cabscout.R;
@@ -234,6 +240,17 @@ public class Utils {
     }
 
     @SuppressWarnings("ConstantConditions")
+    public static Dialog makeDialog(Context context, int layout) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(layout);
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        return dialog;
+    }
+
+    @SuppressWarnings("ConstantConditions")
     public static Dialog createDialog(Context context) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -270,7 +287,7 @@ public class Utils {
         return ba1;
     }
 
-    public Bitmap base64decode(String base64) {
+    public Bitmap base64Decode(String base64) {
         try {
             byte[] encodeByte = Base64.decode(base64, Base64.DEFAULT);
             Bitmap bitmap;
@@ -344,6 +361,46 @@ public class Utils {
         TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
+    }
+
+    public static BottomSheetDialog createBottomSheetDialog(Context context, int layout) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+        bottomSheetDialog.setContentView(layout);
+
+        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog
+                        .findViewById(android.support.design.R.id.design_bottom_sheet);
+                assert bottomSheet != null;
+                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+        return bottomSheetDialog;
+
+    }
+
+    public static void showAlert(final AppCompatActivity context, String message) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setMessage(message);
+
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                context.finish();
+            }
+        });
+
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).create().show();
+
     }
 
 }

@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.app.cabscout.model.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/pickupDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/darker_gray"/>
 
-                <com.app.cabscout.model.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/pickupTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/pickupLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/dropLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                     android:src="@drawable/ic_icon_small_any"
                     android:layout_gravity="center"/>
 
-                <com.app.cabscout.model.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/carType"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -119,14 +119,16 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginStart="20dp"
                     android:textAllCaps="false"
+                    android:textColor="#000000"
                     android:gravity="center|start" />
 
-                <com.app.cabscout.model.custom.CustomTextViewBold
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
                     android:textAllCaps="true"
+                    android:textColor="#000000"
                     android:text="Change"/>
 
             </LinearLayout>
@@ -149,35 +151,36 @@
             android:layout_gravity="center"
             android:padding="20dp">
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fare Estimate"
+                android:textColor="#000000"
                 android:textAllCaps="true" />
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:textColor="#000000"
                 android:text="Enter pickup and destination above" />
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
+                android:textColor="#000000"
                 android:text="Actual estimate to be provided prior to pickup"/>
 
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
-    <com.app.cabscout.model.custom.CustomTextViewBold
+    <TextView
         android:id="@+id/scheduleRide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="?android:attr/borderlessButtonStyle"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:clickable="true"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:textColor="#000000"

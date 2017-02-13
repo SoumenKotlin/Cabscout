@@ -3,9 +3,9 @@ package com.app.cabscout.views;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -27,6 +27,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener{
 
     EditText editName, editEmail, editPhone, editPassword, editConfirmPassword;
@@ -41,6 +43,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     RelativeLayout relativeLayout;
     String cab_id;
     Activity activity = this;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,11 +91,13 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
             case R.id.alreadyAccount:
                 Intent i = new Intent(activity, LoginActivity.class);
                 startActivity(i);
                 finish();
                 break;
+
             case R.id.textRegister:
                 name = editName.getText().toString().trim();
                 email = editEmail.getText().toString().trim();
@@ -97,15 +106,15 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 confirmPassword = editConfirmPassword.getText().toString();
 
                 if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                    Snackbar.make(relativeLayout, "Please fill all the details", Snackbar.LENGTH_LONG).show();
+                    Utils.makeSnackBar(activity, relativeLayout, "Please fill all the details");
                 } else if (!password.equals(confirmPassword)) {
-                    Snackbar.make(relativeLayout, "Password didn't match", Snackbar.LENGTH_LONG).show();
+                    Utils.makeSnackBar(activity, relativeLayout, "Password didn't match");
                 }
                 else if (!Utils.emailValidator(email)) {
-                    Snackbar.make(relativeLayout, "Please enter the valid email address", Snackbar.LENGTH_LONG).show();
+                    Utils.makeSnackBar(activity, relativeLayout, "Please enter the valid email address");
                 }
                 else if(!termsCheckBox.isChecked() || !policyCheckBox.isChecked()) {
-                    Snackbar.make(relativeLayout, "You must be agree to all the terms and conditions", Snackbar.LENGTH_LONG).show();
+                    Utils.makeSnackBar(activity, relativeLayout, "You must be agree to all the terms and conditions");
                 }
                 else {
                  //   progressView.setVisibility(View.VISIBLE);

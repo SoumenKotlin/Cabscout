@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        style="?android:attr/textAppearanceLarge"
+        android:padding="20dp"
+
+        android:text="Choose Payment Method"/>
+
+ <!--   <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+-->
+    <TextView
+        android:id="@+id/cash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cash"
+        android:drawableLeft="@mipmap/cash"
+        android:drawableStart="@mipmap/cash"
+        android:drawablePadding="10dp"
+        android:gravity="center|start"
+        style="?android:attr/borderlessButtonStyle"
+        android:padding="20dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/creditCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Credit card"
+        android:drawableLeft="@mipmap/credit_card"
+        android:drawableStart="@mipmap/credit_card"
+        android:drawablePadding="10dp"
+        android:gravity="center|start"
+        style="?android:attr/borderlessButtonStyle"
+        android:padding="20dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/corpAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Corporate Account"
+        android:drawableLeft="@mipmap/corp_account"
+        android:drawableStart="@mipmap/corp_account"
+        android:drawablePadding="10dp"
+        android:gravity="center|start"
+        style="?android:attr/borderlessButtonStyle"
+        android:padding="20dp"/>
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.app.cabscout.views;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,8 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ScheduledHistoryActivity extends AppCompatActivity {
 
     //private static final String TAG = ScheduledHistoryActivity.class.getSimpleName();
@@ -31,6 +34,11 @@ public class ScheduledHistoryActivity extends AppCompatActivity {
     private CircularProgressView progressView;
     private TextView noScheduledRides;
     Activity activity = this;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -29,8 +29,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-/*this is first screen of the app here userlogin status are checked  if user are not login then go for
-login screen otherwise go to home screen to the directly -------------------Created by  Vijay Kumar*/
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SplashActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks{
 
@@ -43,6 +42,10 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
     final static int REQUEST_LOCATION = 199;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         setContentView(R.layout.activity_splash);
 
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
-        Log.e(TAG, "device token---"+deviceToken);
+        Log.e(TAG, "device token: " +deviceToken);
 
         CSPreferences.putString(activity, "device_token", deviceToken);
 

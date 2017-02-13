@@ -2,6 +2,7 @@ package com.app.cabscout.views;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,8 @@ import com.facebook.appevents.AppEventsLogger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -35,6 +38,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Activity activity = this;
     Dialog dialog;
     CallbackManager callbackManager;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +123,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onEvent(Event event) {
         /*progressView.setVisibility(View.GONE);*/
         dialog.dismiss();
+
         switch (event.getKey()) {
             case Constants.LOGIN_SUCCESS:
                 launchActivity();
                 break;
+
             case Constants.ACCOUNT_NOT_REGISTERED:
                 Toast.makeText(activity, event.getValue(), Toast.LENGTH_SHORT).show();
                 break;

@@ -10,14 +10,21 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".model.custom.Application"
         android:allowBackup="true"
         android:icon="@drawable/ic_icon_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.MainActivity" />
-        <activity android:name=".views.ExtraActivity" />
+        <activity android:name=".views.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
+        <activity android:name=".views.MainActivity" />
+        <activity android:name=".views.ExtraActivity"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -27,13 +34,7 @@
 
         <activity android:name=".views.CabCompaniesActivity" />
         <activity android:name=".views.RegistrationActivity" />
-        <activity android:name=".views.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".views.LoginActivity" />
         <activity android:name=".views.SearchAddressActivity" />
         <activity android:name=".views.BookRideActivity" />
@@ -52,7 +53,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".views.LoginFacebookActivity"/>
+        <activity android:name=".views.LoginFacebookActivity" />
+        <activity android:name=".views.CabArrivingActivity"/>
     </application>
 
 </manifest>

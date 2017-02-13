@@ -42,4 +42,9 @@ public class Constants {
     public static final int FACEBOOK_LOGIN_SUCCESS = 1025;
     public static final int FACEBOOK_LOGIN_EMPTY = 1026;
 
+
+
+
+    public static final String CANCEL_TRIP = "Are you sure you want to cancel this trip?";
+
 }

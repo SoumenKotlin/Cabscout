@@ -20,7 +20,7 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:id="@+id/pickupAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:id="@+id/dropAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/dateTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                 android:drawablePadding="5dp"
                 android:text="Date: Jan,Tue 24 07:55 pm"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/carName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
                     android:id="@+id/ridePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                     android:drawablePadding="5dp"
                     android:text="Price: 100"/>
 
-                <com.app.cabscout.model.custom.CustomTextViewBold
+                <TextView
                     android:id="@+id/paymentType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

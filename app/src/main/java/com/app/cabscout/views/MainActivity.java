@@ -2,6 +2,7 @@ package com.app.cabscout.views;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -29,7 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.cabscout.R;
-import com.app.cabscout.controller.LocationService;
 import com.app.cabscout.model.CSPreferences;
 import com.app.cabscout.model.Config;
 import com.app.cabscout.model.Constants;
@@ -37,6 +37,8 @@ import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,10 +53,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener{
+        LocationListener, View.OnClickListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
     Toolbar toolbar;
@@ -62,12 +65,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     GoogleMap googleMap;
 
     private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest = null;
 
     Activity activity=this;
 
     float zoomLevel;
     Location mLastLocation;
     LatLng latLng;
+    double lat, lng;
 
     ImageView imageMarker;
     FloatingActionButton currentLocationButton;
@@ -91,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Intent serviceIntent;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -99,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void initViews() {
-        startService();
+        //startService();
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -140,6 +150,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initNavigationDrawer();
 
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(7000);
+        mLocationRequest.setSmallestDisplacement(1);
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -154,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.currentLocation:
                 currentLocationButton.setVisibility(View.GONE);
                 initCamera(mLastLocation);
-                startService();
+//                startService();
                 break;
 
             case R.id.scheduleRide:
@@ -254,8 +270,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-    }
 
+        if (mLastLocation == null)
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
 
     @Override
     protected void onResume() {
@@ -273,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .bearing( 0.0f )
                         .tilt( 0.0f )
                         .build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
 
             }
         }
@@ -286,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void startService() {
+    /*public void startService() {
 
 
         serviceIntent = new Intent(activity, LocationService.class);
@@ -298,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         serviceIntent = new Intent(activity, LocationService.class);
         stopService(serviceIntent);
-    }
+    }*/
 
     @Override
     protected void onStart() {
@@ -331,43 +349,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initCamera(Location mLocation) {
 
-        double lat, lng;
+        /* LocationService locationService = new LocationService();
+            mLocation = locationService.getLocation(activity); */
 
-        LocationService locationService = new LocationService();
+        Log.e(TAG, "current location before--- "+ mLocation);
 
-        if (mLocation == null)
-
-            mLocation = locationService.getLocation(activity);
-
-
-        Log.e(TAG, "current location---"+ mLocation);
-
-        CameraPosition position;
-
-        if (mLocation != null) {
-            position = CameraPosition.builder()
-                    .target(new LatLng(mLocation.getLatitude(),
-                            mLocation.getLongitude()))
-                    .zoom(16f)
-                    .bearing(0.0f)
-                    .tilt(0.0f)
-                    .build();
-
+        if (mLocation == null) {
+            mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            lat = 30.708444;
+            lng = 76.692290;
+        } else {
             lat = mLocation.getLatitude();
             lng = mLocation.getLongitude();
-
         }
-        else {
-            position = CameraPosition.builder()
-                    .target(new LatLng(30.708552, 76.692349))
-                    .zoom(16f)
-                    .bearing(0.0f)
-                    .tilt(0.0f)
-                    .build();
 
-            lat = 30.708552;
-            lng = 76.692349;
-        }
+        Log.e(TAG, "current location after--- "+ mLocation);
+
+        CameraPosition position = CameraPosition.builder()
+                .target(new LatLng(lat,lng))
+                .zoom(16f)
+                .bearing(0.0f)
+                .tilt(0.0f)
+                .build();
+
 
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -388,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onCameraMove() {
                 currentLocationButton.setVisibility(View.VISIBLE);
 
-                stopService();
+                //     stopService();
 
                 latLng = googleMap.getCameraPosition().target;
                 zoomLevel = googleMap.getCameraPosition().zoom;
@@ -561,7 +565,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.e("sorry try again", "Style parsing failed.");
             }
         }catch (Resources.NotFoundException e){
-
             e.printStackTrace();
         }
 
@@ -579,17 +582,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initCamera(mLastLocation);
 
         this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        //     this.googleMap.setMyLocationEnabled(true);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        this.googleMap.setMyLocationEnabled(true);
     }
 
     @Override
@@ -651,4 +644,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e(TAG, "Current lat: "+location.getLatitude());
+        mLastLocation = location;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

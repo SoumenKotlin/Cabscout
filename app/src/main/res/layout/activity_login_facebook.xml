@@ -84,7 +84,7 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <com.app.cabscout.model.custom.CustomTextViewRegular
+        <TextView
             android:id="@+id/textRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -43,13 +43,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                        <com.app.cabscout.model.custom.CustomTextViewBold
+                        <TextView
                             android:id="@+id/driverName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Driver name"/>
 
-                        <com.app.cabscout.model.custom.CustomTextViewRegular
+                        <TextView
                             android:id="@+id/paymentType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -66,13 +66,13 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <com.app.cabscout.model.custom.CustomTextViewRegular
+                        <TextView
                             android:id="@+id/tripDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Date: Jan,Tue 24 07:55 pm"/>
 
-                        <com.app.cabscout.model.custom.CustomTextViewBold
+                        <TextView
                             android:id="@+id/price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                 android:layout_height="1dp"
                 android:background="#EAEAEA"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:id="@+id/pickupLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                 android:layout_height="1dp"
                 android:background="#EAEAEA"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:id="@+id/dropLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

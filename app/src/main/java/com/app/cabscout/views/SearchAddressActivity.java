@@ -1,6 +1,7 @@
 package com.app.cabscout.views;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -32,6 +34,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class SearchAddressActivity extends AppCompatActivity implements View.OnClickListener{
 
    private final String TAG = SearchAddressActivity.class.getSimpleName();
@@ -47,6 +51,11 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
    // String address, area;
     String str_address;
     ProgressBar progressBar;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +169,13 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(edit_query.getWindowToken(), 0);
+    }
 
     @Override
     protected void onStart() {
@@ -177,6 +193,7 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
 
     @Subscribe
     public void onEvent(Event event) {
+
         switch (event.getKey()) {
             case Constants.ADDRESS_SUCCESS:
                 progressBar.setVisibility(View.INVISIBLE);
@@ -211,7 +228,6 @@ public class SearchAddressActivity extends AppCompatActivity implements View.OnC
 
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

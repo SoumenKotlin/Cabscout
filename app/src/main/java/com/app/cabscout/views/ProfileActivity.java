@@ -3,6 +3,7 @@ package com.app.cabscout.views;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,6 +62,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     String customer_id;
     private final int STORAGE_PERMISSION_CODE = 101;
     private String str_pic;
+    BottomSheetDialog cabBottomDialog;
+    TextView changeCarCompany;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +140,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.bottom_update_photo);
+
+        changeCarCompany = (TextView)findViewById(R.id.changeCarCompany);
+        changeCarCompany.setOnClickListener(this);
+        cabBottomDialog = Utils.createBottomSheetDialog(this, R.layout.bottom_car_company_change);
 
     }
 
@@ -219,6 +232,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 ModelManager.getInstance().getAddWorkManager().addWorkLocation(activity, Operations.updateWorkDetails(activity,
                         "", "", CSPreferences.readString(activity, "customer_id"), ""));
                 break;
+            }
+
+            case R.id.changeCarCompany: {
+                cabBottomDialog.show();
             }
         }
     }

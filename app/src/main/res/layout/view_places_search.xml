@@ -26,14 +26,14 @@
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp">
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:id="@+id/textAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Location"
                 android:textColor="#000000"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/textArea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

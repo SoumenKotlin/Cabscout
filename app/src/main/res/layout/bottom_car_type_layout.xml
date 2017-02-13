@@ -3,12 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.app.cabscout.model.custom.CustomTextViewBold
-        android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select Car Type"
-        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
         android:padding="20dp"
+        android:textColor="#000000"
         android:textSize="18sp"/>
 
     <View

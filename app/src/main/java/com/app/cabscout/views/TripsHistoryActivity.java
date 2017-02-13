@@ -1,6 +1,7 @@
 package com.app.cabscout.views;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.app.cabscout.R;
 import com.app.cabscout.controller.ModelManager;
 import com.app.cabscout.controller.TripsHistoryManager;
+import com.app.cabscout.model.CSPreferences;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Operations;
@@ -22,6 +24,8 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class TripsHistoryActivity extends AppCompatActivity {
 
     Toolbar toolbar;
@@ -29,6 +33,11 @@ public class TripsHistoryActivity extends AppCompatActivity {
     private CircularProgressView progressView;
     private TextView noRides;
     Activity activity = this;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +67,8 @@ public class TripsHistoryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        ModelManager.getInstance().getTripsHistoryManager().getTripsHistory(activity, Operations.getTripsHistory(activity,
-                "39"/*CSPreferences.readString(activity, "customer_id")*/));
+        ModelManager.getInstance().getTripsHistoryManager().getTripsHistory(activity, Operations.getTripsHistory(
+                activity, CSPreferences.readString(activity, "customer_id")));
     }
 
     @Override

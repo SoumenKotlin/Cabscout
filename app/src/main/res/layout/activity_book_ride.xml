@@ -40,7 +40,7 @@
                 android:clickable="true"
                 app:cardCornerRadius="5dp">
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
                     android:id="@+id/pickupAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                     android:layout_height="1dp"
                     android:background="@android:color/darker_gray"/>
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
                     android:id="@+id/dropAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
                             android:layout_weight="1"
                             android:gravity="center">
 
-                            <com.app.cabscout.model.custom.CustomTextViewBold
+                            <TextView
                                 android:id="@+id/distance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -127,10 +127,11 @@
                                 android:textColor="#000000"
                                 style="?android:attr/textAppearanceSmall"/>
 
-                            <com.app.cabscout.model.custom.CustomTextViewRegular
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Distance"/>
+                                android:text="Distance"
+                                tools:ignore="MissingPrefix" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -141,7 +142,7 @@
                             android:layout_weight="1"
                             android:gravity="center">
 
-                            <com.app.cabscout.model.custom.CustomTextViewBold
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="00:20"
@@ -151,7 +152,7 @@
                                 android:textColor="#000000"
                                 style="?android:attr/textAppearanceSmall"/>
 
-                            <com.app.cabscout.model.custom.CustomTextViewRegular
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Time"/>
@@ -165,7 +166,7 @@
                             android:layout_weight="1"
                             android:gravity="center">
 
-                            <com.app.cabscout.model.custom.CustomTextViewBold
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="$10"
@@ -175,7 +176,7 @@
                                 android:textColor="#000000"
                                 style="?android:attr/textAppearanceSmall"/>
 
-                            <com.app.cabscout.model.custom.CustomTextViewRegular
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Price"/>
@@ -195,23 +196,28 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/promoCodeLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="10dp"
                             android:layout_weight="1"
-                            android:layout_gravity="center">
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_gravity="center|start">
 
-                            <com.app.cabscout.model.custom.CustomTextViewBold
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Promo code"
+                                android:text="Promo Code"
+                                android:layout_gravity="start"
                                 android:textColor="#000000"
                                 style="?android:attr/textAppearanceSmall"/>
 
-                            <com.app.cabscout.model.custom.CustomTextViewRegular
+                            <TextView
+                                android:id="@+id/promoCode"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="start"
                                 android:text="NONE"/>
 
                         </LinearLayout>
@@ -222,22 +228,25 @@
                             android:background="@android:color/darker_gray"/>
 
                         <LinearLayout
+                            android:id="@+id/paymentLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="10dp"
+                            style="@style/Widget.AppCompat.Button.Borderless"
                             android:layout_weight="1"
                             android:layout_gravity="end"
                             android:gravity="end">
 
-                            <com.app.cabscout.model.custom.CustomTextViewBold
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Payment"
                                 android:textColor="#000000"
                                 style="?android:attr/textAppearanceSmall"/>
 
-                            <com.app.cabscout.model.custom.CustomTextViewRegular
+                            <TextView
+                                android:id="@+id/paymentMethod"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Cash"/>
@@ -250,7 +259,7 @@
                         android:layout_height="1dp"
                         android:background="@android:color/darker_gray"/>
 
-                    <com.app.cabscout.model.custom.CustomTextViewRegular
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/promo_code_note"
@@ -270,7 +279,8 @@
                 app:cardCornerRadius="10dp"
                 android:layout_marginTop="10dp">
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
+                    android:id="@+id/txtBookRide"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Book Ride"

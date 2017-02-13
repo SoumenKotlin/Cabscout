@@ -2,6 +2,7 @@ package com.app.cabscout.views;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +39,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ScheduleActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = ScheduleActivity.class.getSimpleName();
@@ -56,6 +59,11 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
     RecyclerView recyclerView;
     String carCat = "0";
     private ArrayList<String> carTypeList;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_icon_bg">
 
-    <com.app.cabscout.model.custom.CustomTextViewRegular
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login"
@@ -56,7 +56,7 @@
                 android:drawableStart="@drawable/ic_icon_lock"
                 android:drawablePadding="20dp"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/textLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:background="@drawable/view_clicked"/>
 
-            <com.app.cabscout.model.custom.CustomTextViewRegular
+            <TextView
                 android:id="@+id/fbLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,12 +93,12 @@
                 android:gravity="center"
                 android:layout_margin="20dp">
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Not have an acount?"/>
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
                     android:id="@+id/createAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

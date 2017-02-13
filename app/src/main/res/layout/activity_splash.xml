@@ -16,14 +16,14 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.app.cabscout.model.custom.CustomTextViewBold
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CAB"
             android:textSize="50sp"
             android:textColor="#000000" />
 
-        <com.app.cabscout.model.custom.CustomTextViewBold
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SCOUT"

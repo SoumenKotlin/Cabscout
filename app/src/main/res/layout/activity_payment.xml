@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.app.cabscout.model.custom.CustomTextViewBold
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Payment Methods"
@@ -25,7 +25,7 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"/>
 
-        <com.app.cabscout.model.custom.CustomTextViewRegular
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -34,7 +34,7 @@
             android:padding="20dp"
             style="?android:attr/borderlessButtonStyle"/>
 
-        <com.app.cabscout.model.custom.CustomTextViewRegular
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="2.  Corporate Account"
@@ -42,7 +42,7 @@
             android:padding="20dp"
             style="?android:attr/borderlessButtonStyle"/>
 
-        <com.app.cabscout.model.custom.CustomTextViewRegular
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="3.  Credit Card"

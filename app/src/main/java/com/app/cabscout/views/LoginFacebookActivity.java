@@ -2,6 +2,7 @@ package com.app.cabscout.views;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +36,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class LoginFacebookActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = LoginFacebookActivity.class.getSimpleName();
@@ -47,6 +50,11 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
     boolean isCompany;
     String company_id, device_token, profile_pic, fb_id;
     Dialog dialog;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

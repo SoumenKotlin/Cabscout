@@ -1,50 +1,52 @@
 package com.app.cabscout.views;
 
 import android.app.Activity;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.cabscout.R;
-import com.app.cabscout.controller.CabCompaniesManager;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
+import com.app.cabscout.model.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.Map;
 
-public class CabCompaniesActivity extends AppCompatActivity implements View.OnClickListener{
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-    private final String TAG = CabCompaniesActivity.class.getSimpleName();
+import static com.app.cabscout.controller.CabCompaniesManager.cabCompaniesList;
+
+public class CabCompaniesActivity extends AppCompatActivity implements View.OnClickListener {
+
     Activity activity = this;
     Toolbar toolbar;
     RelativeLayout relativeLayout;
-    TextView next_register, selectCab;
-    BottomSheetDialog bottomSheetDialog;
+    TextView next_register;
+    EditText selectCab;
+   /* BottomSheetDialog bottomSheetDialog;
     ArrayList<String> cabCompaniesList;
     ArrayList<Integer> cabIdList;
-    ArrayAdapter<String> arrayAdapter;
+    ArrayAdapter<String> arrayAdapter;*/
     ListView listView;
-    String selected_cab = "";
+    String company_id, company;
     int cab_id;
-
+    boolean isCompany;
     TextView alreadyAccount;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,19 +57,18 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void initViews() {
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Create Account");
         setSupportActionBar(toolbar);
 
-        relativeLayout = (RelativeLayout)findViewById(R.id.activity_cab_companies);
-        next_register = (TextView)findViewById(R.id.next_register);
-        selectCab = (TextView)findViewById(R.id.selectCab);
-        alreadyAccount = (TextView)findViewById(R.id.alreadyAccount);
+        relativeLayout = (RelativeLayout) findViewById(R.id.activity_cab_companies);
+        next_register = (TextView) findViewById(R.id.next_register);
+        selectCab = (EditText) findViewById(R.id.selectCab);
+        alreadyAccount = (TextView) findViewById(R.id.alreadyAccount);
         alreadyAccount.setOnClickListener(this);
         next_register.setOnClickListener(this);
-        selectCab.setOnClickListener(this);
 
-        bottomSheetDialog = new BottomSheetDialog(this);
+      /*  bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet);
 
         bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -79,14 +80,14 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
                 assert bottomSheet != null;
                 BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
-        });
+        });*/
 
-        listView = (ListView)bottomSheetDialog.findViewById(R.id.listView);
+      /*  listView = (ListView) bottomSheetDialog.findViewById(R.id.listView);
         cabCompaniesList = new ArrayList<>();
-        cabIdList = new ArrayList<>();
+        cabIdList = new ArrayList<>();*/
 
-        for (Map.Entry<Integer,String> entry : CabCompaniesManager.cabCompaniesList.entrySet()) {
-            Log.e(TAG, "cab id--"+ entry.getKey());
+        /*for (Map.Entry<Integer, String> entry : CabCompaniesManager.cabCompaniesList.entrySet()) {
+            Log.e(TAG, "cab id--" + entry.getKey());
             cabCompaniesList.add(entry.getValue());
             cabIdList.add(entry.getKey());
         }
@@ -103,7 +104,7 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
                 cab_id = cabIdList.get(position);
                 bottomSheetDialog.dismiss();
             }
-        });
+        });*/
     }
 
     @Override
@@ -117,9 +118,22 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.next_register:
-                if (selected_cab.isEmpty())
-                    Snackbar.make(relativeLayout, "Please select your cab company", Snackbar.LENGTH_LONG).show();
-                else {
+                company = selectCab.getText().toString().trim();
+                for (Map.Entry<Integer, String> entry : cabCompaniesList.entrySet()) {
+                    if (cabCompaniesList.containsValue(company)) {
+                        company_id = String.valueOf(entry.getKey());
+                        isCompany = true;
+
+                    }
+                    else {
+                        isCompany = false;
+                    }
+                }
+                if (company.isEmpty())
+                    Utils.makeSnackBar(activity, relativeLayout, "Please enter your cab company");
+                else if (!isCompany)
+                    Utils.makeSnackBar(activity, relativeLayout, "Please enter valid cab company");
+                else if (isCompany){
                     Intent i = new Intent(activity, RegistrationActivity.class);
                     i.putExtra("cab_id", String.valueOf(cab_id));
                     startActivity(i);
@@ -127,9 +141,7 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
                 }
                 break;
 
-            case R.id.selectCab:
-                bottomSheetDialog.show();
-                break;
+
         }
     }
 
@@ -155,8 +167,6 @@ public class CabCompaniesActivity extends AppCompatActivity implements View.OnCl
 
                 break;
         }
-
     }
-
 
 }

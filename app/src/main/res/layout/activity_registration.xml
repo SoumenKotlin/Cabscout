@@ -109,12 +109,12 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp">
 
-                        <com.app.cabscout.model.custom.CustomTextViewRegular
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/terms_conditions"/>
 
-                        <com.app.cabscout.model.custom.CustomTextViewRegular
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/terms_of_services"
@@ -143,12 +143,12 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp">
 
-                        <com.app.cabscout.model.custom.CustomTextViewRegular
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/terms_conditions"/>
 
-                        <com.app.cabscout.model.custom.CustomTextViewRegular
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/privacy_policy"
@@ -189,7 +189,7 @@
 
                 </LinearLayout>
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
                     android:id="@+id/textRegister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:background="@drawable/view_clicked"/>
 
-                <com.app.cabscout.model.custom.CustomTextViewRegular
+                <TextView
                     android:id="@+id/alreadyAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

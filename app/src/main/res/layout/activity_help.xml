@@ -29,11 +29,12 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:clickable="true">
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 android:text="help@cabscout.com"
+                android:textColor="@android:color/black"
                 android:drawableLeft="@drawable/ic_icon_help_email"
                 android:drawableStart="@drawable/ic_icon_help_email"
                 android:drawablePadding="20dp"
@@ -52,10 +53,11 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:clickable="true">
 
-            <com.app.cabscout.model.custom.CustomTextViewBold
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
+                android:textColor="@android:color/black"
                 android:text="+1 (000) 123 4567"
                 android:drawableLeft="@drawable/ic_icon_help_email"
                 android:drawableStart="@drawable/ic_icon_help_email"
