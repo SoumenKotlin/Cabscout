@@ -2,6 +2,7 @@ package com.app.cabscout.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +20,7 @@ import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Operations;
 import com.app.cabscout.views.adapters.TripsHistoryAdapter;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -30,7 +31,7 @@ public class TripsHistoryActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     private RecyclerView recyclerView;
-    private CircularProgressView progressView;
+    private CircleProgressBar progressView;
     private TextView noRides;
     Activity activity = this;
 
@@ -58,7 +59,8 @@ public class TripsHistoryActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        progressView = (CircularProgressView)findViewById(R.id.progressView);
+        progressView = (CircleProgressBar) findViewById(R.id.progressView);
+        progressView.setColorSchemeColors(Color.RED, Color.YELLOW, Color.BLACK);
         progressView.setVisibility(View.VISIBLE);
         noRides = (TextView)findViewById(R.id.noRides);
     }

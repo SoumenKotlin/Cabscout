@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.app.cabscout.R;
 import com.google.android.gms.maps.model.LatLng;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import org.json.JSONObject;
 
@@ -75,7 +76,7 @@ public class Utils {
                     strReturnedAddress.append(", ").append(returnedAddress.getSubLocality());
 
                 strAdd = strReturnedAddress.toString();
-                Log.e(TAG, "Current address-- "+strReturnedAddress.toString());
+                // Log.e(TAG, "address-- "+strReturnedAddress.toString());
             } else {
                 Log.e(TAG, "No address returned");
             }
@@ -257,6 +258,9 @@ public class Utils {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCancelable(false);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        CircleProgressBar progressBar = (CircleProgressBar)dialog.findViewById(R.id.progressBar);
+        progressBar.setColorSchemeColors(Color.RED, Color.BLACK);
 
         return dialog;
     }

@@ -10,7 +10,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.cabscout.R;
-import com.app.cabscout.controller.CabCompaniesManager;
 import com.app.cabscout.controller.ModelManager;
 import com.app.cabscout.model.CSPreferences;
 import com.app.cabscout.model.Config;
@@ -34,7 +32,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Map;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -93,7 +90,7 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
         editCompany.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+               /* if (!hasFocus) {
                     for (Map.Entry<Integer, String> entry : CabCompaniesManager.cabCompaniesList.entrySet()) {
                         Log.e(TAG, entry.getValue());
 
@@ -108,7 +105,7 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
                 } else {
 
                     textInputCompany.setErrorEnabled(false);
-                }
+                }*/
             }
         });
 
@@ -140,9 +137,12 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
                     return;
                 } else if (!Utils.emailValidator(email)) {
                     Utils.makeSnackBar(activity, linearLayout, "Please enter the valid email address");
+                } else {
+                    ModelManager.getInstance().getCabCompaniesManager().getCabCompanies(activity,
+                            Operations.getCabCompaniesTask(activity, company));
                 }
 
-                for (Map.Entry<Integer, String> entry : CabCompaniesManager.cabCompaniesList.entrySet()) {
+               /* for (Map.Entry<Integer, String> entry : CabCompaniesManager.cabCompaniesList.entrySet()) {
                     if (CabCompaniesManager.cabCompaniesList.containsValue(company)) {
                         company_id = String.valueOf(entry.getKey());
                         isCompany = true;
@@ -151,21 +151,7 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
                     else {
                         isCompany = false;
                     }
-                }
-
-                if (isCompany) {
-                    dialog.show();
-
-                    try {
-                        ModelManager.getInstance().getFacebookLoginManager().registerUser(activity, Config.fb_login_url, Operations.fbLoginParams(activity,
-                                company_id, email, URLEncoder.encode(name, "utf-8"), device_token, phone, profile_pic, fb_id));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-                    Utils.makeSnackBar(activity, linearLayout, "Please enter the valid company code");
-                }
+                }*/
 
                 break;
         }
@@ -187,9 +173,25 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
 
     @Subscribe
     public void onEvent(Event event) {
-        dialog.dismiss();
+
         switch (event.getKey()) {
+
+            case Constants.CAB_COMPANIES_SUCCESS:
+                try {
+                    ModelManager.getInstance().getFacebookLoginManager().registerUser(activity, Config.fb_login_url, Operations.fbLoginParams(activity,
+                            company_id, email, URLEncoder.encode(name, "utf-8"), device_token, phone, profile_pic, fb_id));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case Constants.CAB_COMPANIES_EMPTY:
+                dialog.dismiss();
+                Utils.makeSnackBar(activity, linearLayout, "Please enter the valid company code");
+                break;
+
             case Constants.FACEBOOK_LOGIN_SUCCESS:
+                dialog.dismiss();
                 Toast.makeText(activity, "Logged-in successfully", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(activity, MainActivity.class);
                 CSPreferences.putString(activity, "login_status", "true");
@@ -198,11 +200,13 @@ public class LoginFacebookActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case Constants.ALREADY_REGISTERED:
+                dialog.dismiss();
                 Utils.makeSnackBar(activity, linearLayout, "Sorry, this email is already in use. Please try with another email.");
 
                 break;
 
             case Constants.SERVER_ERROR:
+                dialog.dismiss();
                 Utils.makeSnackBar(activity, linearLayout, "Sorry, server error occurred. Please try after sometime.");
 
                 break;

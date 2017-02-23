@@ -37,11 +37,12 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_icon_close"
                 android:layout_centerInParent="true"
+                android:background="?selectableItemBackgroundBorderless"
                 android:layout_alignBottom="@+id/edit_query"
                 android:layout_alignRight="@+id/edit_query"
                 android:layout_alignEnd="@+id/edit_query"
                 android:layout_marginRight="11dp"
-                android:layout_marginEnd="11dp" />
+                android:layout_marginEnd="11dp"/>
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

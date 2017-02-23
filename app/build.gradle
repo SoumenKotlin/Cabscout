@@ -46,6 +46,11 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'com.facebook.android:facebook-android-sdk:4.19.0'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.stripe:stripe-android:2.1.0'
+    compile 'com.stripe:stripe-java:3.10.0'
+
+    compile('com.lsjwzh:materialloadingprogressbar:0.5.8-RELEASE')
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -2,6 +2,7 @@ package com.app.cabscout.views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -60,7 +62,7 @@ public class CabArrivingActivity extends AppCompatActivity implements OnMapReady
 
     public void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Arriving");
+        toolbar.setTitle("On Trip");
         setSupportActionBar(toolbar);
 
         polylines = new ArrayList<>();
@@ -94,6 +96,18 @@ public class CabArrivingActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
+
+        try {
+
+            boolean success = gMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+            if (!success) {
+                Log.e("sorry try again", "Style parsing failed.");
+            }
+        }catch (Resources.NotFoundException e){
+            e.printStackTrace();
+        }
 
         Routing routing = new Routing.Builder()
                 .travelMode(Routing.TravelMode.DRIVING)

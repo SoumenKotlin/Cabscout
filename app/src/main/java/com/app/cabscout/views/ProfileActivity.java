@@ -4,21 +4,20 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,7 +42,7 @@ import java.net.URLEncoder;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     Toolbar toolbar;
     Activity activity = this;
@@ -59,11 +58,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ImageView updateImage;
     TextView openCamera, openGallery;
     Bitmap photo;
-    String customer_id;
     private final int STORAGE_PERMISSION_CODE = 101;
     private String str_pic;
     BottomSheetDialog cabBottomDialog;
-    TextView changeCarCompany;
+    TextView changeCarCompany, cancel, changeCompany, changePassword;
+    String companyName, company_id, customer_id;
+    EditText editCompanyName;
+    CheckBox allowCabCheckBox;
+    boolean isAllow;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -138,28 +140,34 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         updateImage.setOnClickListener(this);
 
-        bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(R.layout.bottom_update_photo);
+        bottomSheetDialog = Utils.createBottomSheetDialog(this, R.layout.bottom_update_photo);
 
         changeCarCompany = (TextView)findViewById(R.id.changeCarCompany);
         changeCarCompany.setOnClickListener(this);
         cabBottomDialog = Utils.createBottomSheetDialog(this, R.layout.bottom_car_company_change);
 
+        allowCabCheckBox = (CheckBox) findViewById(R.id.allowCabCheckBox);
+        allowCabCheckBox.setOnCheckedChangeListener(this);
+
+        changePassword = (TextView)findViewById(R.id.changePassword);
+        changePassword.setOnClickListener(this);
     }
 
-    public void showBottomSheet(BottomSheetDialog bottomSheetDialog) {
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        dialog.show();
+        if (isChecked) {
+            isAllow = true;
+            ModelManager.getInstance().getAllowDriversManager().allowedDrivers(activity,
+                    Operations.updateAllowedDrivers(activity, customer_id, "1"));
+        } else {
+            isAllow = false;
+            ModelManager.getInstance().getAllowDriversManager().allowedDrivers(activity,
+                    Operations.updateAllowedDrivers(activity, customer_id, "0"));
+        }
+    }
 
-        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog
-                        .findViewById(android.support.design.R.id.design_bottom_sheet);
-                assert bottomSheet != null;
-                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
-
+    public void changePicBottomSheet(BottomSheetDialog bottomSheetDialog) {
         openCamera = (TextView) bottomSheetDialog.findViewById(R.id.openCamera);
         openGallery = (TextView) bottomSheetDialog.findViewById(R.id.openGallery);
 
@@ -168,12 +176,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         bottomSheetDialog.show();
     }
 
+    public void changeCarBottomSheet(BottomSheetDialog bottomSheetDialog) {
+        cancel = (TextView) bottomSheetDialog.findViewById(R.id.cancel);
+        changeCompany = (TextView) bottomSheetDialog.findViewById(R.id.changeCompany);
+
+        editCompanyName = (EditText) bottomSheetDialog.findViewById(R.id.editCompanyName);
+
+        cancel.setOnClickListener(this);
+        changeCompany.setOnClickListener(this);
+
+        bottomSheetDialog.show();
+
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.updateImage:
-                showBottomSheet(bottomSheetDialog);
+                changePicBottomSheet(bottomSheetDialog);
                 break;
 
             case R.id.openCamera:
@@ -193,23 +214,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.addHome: {
-                Intent homeIntent = new Intent(activity, SearchAddressActivity.class);
-                homeIntent.putExtra("Address", "Add Home");
-                startActivity(homeIntent);
+                addHome();
                 break;
             }
 
             case R.id.addWork: {
-                Intent workIntent = new Intent(activity, SearchAddressActivity.class);
-                workIntent.putExtra("Address", "Add Work");
-                startActivity(workIntent);
+                addWork();
                 break;
             }
 
             case R.id.editHome: {
-                Intent homeIntent = new Intent(activity, SearchAddressActivity.class);
-                homeIntent.putExtra("Address", "Add Home");
-                startActivity(homeIntent);
+                addHome();
                 break;
             }
 
@@ -221,9 +236,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             case R.id.editWork: {
-                Intent workIntent = new Intent(activity, SearchAddressActivity.class);
-                workIntent.putExtra("Address", "Add Work");
-                startActivity(workIntent);
+                addWork();
                 break;
             }
 
@@ -235,10 +248,44 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             case R.id.changeCarCompany: {
-                cabBottomDialog.show();
+                changeCarBottomSheet(cabBottomDialog);
+
+                break;
             }
+
+            case R.id.cancel:
+                cabBottomDialog.dismiss();
+                break;
+
+            case R.id.changeCompany:
+                customer_id = CSPreferences.readString(activity, "customer_id");
+                companyName = editCompanyName.getText().toString();
+                if (companyName.isEmpty()) {
+                    Toast.makeText(activity, "Please enter the company code", Toast.LENGTH_SHORT).show();
+                } else {
+                    dialog.show();
+                    ModelManager.getInstance().getCabCompaniesManager().getCabCompanies(activity,
+                            Operations.getCabCompaniesTask(activity, companyName));
+                }
+                break;
+
+            case R.id.changePassword:
+                startActivity(new Intent(activity, ChangePasswordActivity.class));
+                break;
         }
     }
+
+    public void addHome() {
+        Intent homeIntent = new Intent(activity, SearchAddressActivity.class);
+        homeIntent.putExtra("Address", "Add Home");
+        startActivity(homeIntent);
+    }
+
+     public void addWork() {
+         Intent workIntent = new Intent(activity, SearchAddressActivity.class);
+         workIntent.putExtra("Address", "Add Work");
+         startActivity(workIntent);
+     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         customer_id = CSPreferences.readString(activity, "customer_id");
@@ -293,9 +340,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         EventBus.getDefault().unregister(this);
     }
 
+
+
     @Subscribe
     public void onEvent(Event event) {
         switch (event.getKey()) {
+
+            case Constants.LOGIN_SUCCESS:
+                dialog.dismiss();
+                showData();
+                break;
+
             case Constants.ADD_HOME_SUCCESS:
                 dialog.dismiss();
                 homeLayout.setVisibility(View.GONE);
@@ -320,6 +375,44 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(activity, "Sorry, profile picture has not been updated. Please try again.",
                         Toast.LENGTH_SHORT).show();
                 break;
+
+            case Constants.CAB_COMPANIES_SUCCESS:
+                company_id = event.getValue();
+                ModelManager.getInstance().getCabCompaniesManager().updateCabCompany(activity,
+                        Operations.updateCabCompany(activity, customer_id, company_id));
+                break;
+
+            case Constants.CAB_COMPANIES_EMPTY:
+                dialog.dismiss();
+                Toast.makeText(activity, "Please enter the valid company code", Toast.LENGTH_SHORT).show();
+                break;
+
+            case Constants.UPDATE_CAB_SUCCESS:
+                dialog.dismiss();
+                Toast.makeText(activity, "Cab has been updated successfully", Toast.LENGTH_SHORT).show();
+                break;
+
+            case Constants.UPDATE_CAB_FAILED:
+                dialog.dismiss();
+                Toast.makeText(activity, "You are already registered with this company", Toast.LENGTH_SHORT).show();
+                break;
+
+            case Constants.SERVER_ERROR:
+                dialog.dismiss();
+                Toast.makeText(activity, "Sorry, there is some error occurred. Please try again", Toast.LENGTH_SHORT).show();
+                break;
+
+            case Constants.ALLOW_CABS_SUCCESS:
+                dialog.dismiss();
+
+                if (isAllow) {
+                    CSPreferences.putString(activity, "allow_drivers", "1");
+                } else {
+                    CSPreferences.putString(activity, "allow_drivers", "0");
+                }
+
+                Toast.makeText(activity, "Updated successfully", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -327,7 +420,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
 
-        showData();
+       // showData();
+        customer_id = CSPreferences.readString(activity, "customer_id");
+        dialog.show();
+
+        ModelManager.getInstance().getLoginManager().getUserDetails(this, Operations.getUserDetails(this, customer_id));
     }
 
     public void showData() {
@@ -381,4 +478,5 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
         return true;
     }
+
 }

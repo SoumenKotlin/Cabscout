@@ -46,7 +46,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:padding="20dp">
 
@@ -184,6 +184,7 @@
 
 
                 <CheckBox
+                    android:id="@+id/allowCabCheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
@@ -197,14 +198,25 @@
                     android:text="Change Car Company"
                     android:textAllCaps="true"
                     android:textColor="#000"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
                     android:gravity="center|start"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     style="@style/Base.Widget.AppCompat.Button.Borderless"
                     android:drawableRight="@drawable/ic_icon_edit"
                     android:drawableEnd="@drawable/ic_icon_edit"
                     android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:id="@+id/changePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Change Password"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:gravity="center|start"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:drawableRight="@drawable/ic_icon_edit"
+                    android:drawableEnd="@drawable/ic_icon_edit" />
 
                 <!-- <TextView
                      android:layout_width="wrap_content"

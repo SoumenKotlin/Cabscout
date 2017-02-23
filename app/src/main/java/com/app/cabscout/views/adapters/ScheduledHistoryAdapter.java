@@ -13,13 +13,10 @@ import android.widget.TextView;
 
 import com.app.cabscout.R;
 import com.app.cabscout.model.Beans.ScheduleHistoryBeans;
-import com.app.cabscout.model.Utils;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 
 import java.util.ArrayList;
 
-public class ScheduledHistoryAdapter extends RecyclerView.Adapter<ScheduledHistoryAdapter.ViewHolder> implements OnMapReadyCallback {
+public class ScheduledHistoryAdapter extends RecyclerView.Adapter<ScheduledHistoryAdapter.ViewHolder> {
     private Context context;
     private ArrayList<ScheduleHistoryBeans> list;
     private String paymentMode;
@@ -44,16 +41,16 @@ public class ScheduledHistoryAdapter extends RecyclerView.Adapter<ScheduledHisto
 
         holder.ridePrice.setText(historyBeans.getPrice());
 
-        String pickup_address = Utils.getCompleteAddressString(context,
+       /* String pickup_address = Utils.getCompleteAddressString(context,
                 Double.parseDouble(historyBeans.getPickup_lat()),
                 Double.parseDouble(historyBeans.getPickup_lng()));
 
         String drop_address = Utils.getCompleteAddressString(context,
                 Double.parseDouble(historyBeans.getDrop_lat()),
-                Double.parseDouble(historyBeans.getDrop_lng()));
+                Double.parseDouble(historyBeans.getDrop_lng()));*/
 
-        holder.pickupAddress.setText(pickup_address);
-        holder.dropAddress.setText(drop_address);
+        holder.pickupAddress.setText(historyBeans.getPickup_address());
+        holder.dropAddress.setText(historyBeans.getDrop_address());
 
 
         switch (historyBeans.getPayment_type()) {
@@ -76,11 +73,11 @@ public class ScheduledHistoryAdapter extends RecyclerView.Adapter<ScheduledHisto
         return list.size();
     }
 
-    @Override
+   /* @Override
     public void onMapReady(GoogleMap googleMap) {
 
     }
-
+*/
     class ViewHolder extends RecyclerView.ViewHolder{
         private TextView dateTime, ridePrice, paymentType, carName, pickupAddress, dropAddress;
 

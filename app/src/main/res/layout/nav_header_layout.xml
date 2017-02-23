@@ -30,7 +30,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:layout_gravity="center"
-            android:textColor="@android:color/white"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/black"
             android:text="Driver Name" />
 
         <!--<TextView
@@ -45,6 +46,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#fff"/>
+        android:background="#000"/>
 
 </LinearLayout>

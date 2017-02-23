@@ -70,6 +70,10 @@ public class LoginManager {
         }
     }
 
+    public void getUserDetails(Context context, String params) {
+        new ExecuteApiUserDetails(context).execute(params);
+    }
+
     private class ExecuteApiUserDetails extends AsyncTask<String, String, String> {
         private Context mContext;
 

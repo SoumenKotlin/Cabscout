@@ -73,8 +73,13 @@ public class ScheduleHistoryManager {
                         String drop_latitude = drop_coordinates[drop_coordinates.length-2];
                         String drop_longitude = drop_coordinates[drop_coordinates.length-1];
 
+                        String pickup_address = data.getString("pickup_location");
+
+                        String drop_address = data.getString("drop_location");
+
                         ScheduleHistoryBeans historyBeans = new ScheduleHistoryBeans(pickup_latitude, pickup_longitude,
-                                drop_latitude, drop_longitude, dateTime, payment_type, price, car_name);
+                                drop_latitude, drop_longitude, dateTime, payment_type, price,
+                                car_name, pickup_address, drop_address);
 
                         schedulesList.add(historyBeans);
                     }

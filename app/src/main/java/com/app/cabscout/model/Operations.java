@@ -13,9 +13,9 @@ import org.json.JSONObject;
 public class Operations {
     private static final String TAG = Operations.class.getSimpleName();
 
-    public static String getCabCompaniesTask(Context context) {
-        String params = Config.cab_companies_url;
-        Log.e(TAG, "cab_companies list--"+params);
+    public static String getCabCompaniesTask(Context context, String cab_alias) {
+        String params = Config.get_cabs_url+cab_alias;
+        Log.e(TAG, "cab_company params-- "+params);
 
         return params;
     }
@@ -34,6 +34,14 @@ public class Operations {
         String params = Config.login_url+"&email="+email+"&password="+password+"&device_token="+deviceToken+"&device_type=A";
 
         Log.e(TAG, "login parameters--"+params);
+
+        return params;
+    }
+
+    public static String nearbyDriversTask(Context context, double lat, double lng, String car_type) {
+        String params = Config.nearby_drivers_url+"&latitude="+lat+"&longitude="+lng+"&car_type="+car_type;
+
+        Log.e(TAG, "nearby_drivers parameter-- "+params);
 
         return params;
     }
@@ -147,6 +155,30 @@ public class Operations {
         String params = Config.user_details_url+customer_id;
 
         Log.e(TAG, "user_details url-- "+params);
+
+        return params;
+    }
+
+    public static String updateCabCompany(Context context,String customer_id, String cab_id) {
+        String params = Config.change_cab_url+customer_id+"&company_id="+cab_id;
+
+        Log.e(TAG, "update_company params-- "+params);
+
+        return params;
+    }
+
+    public static String updateAllowedDrivers(Context context, String customer_id, String allowed_status) {
+        String params = Config.allow_drivers_url+customer_id+"&allow="+allowed_status;
+
+        Log.e(TAG, "allowed_drivers params-- "+params);
+
+        return params;
+    }
+
+    public static String changePasswordTask(Context context, String customer_id, String oldPassword, String newPassword) {
+        String params = Config.change_password_url+customer_id+"&oldpassword="+oldPassword+"&newpassword="+newPassword;
+
+        Log.e(TAG, "change_password params-- "+params);
 
         return params;
     }

@@ -7,6 +7,7 @@ package com.app.cabscout.model;
 public class Constants {
 
     public static final int CAB_COMPANIES_SUCCESS = 1001;
+    public static final int CAB_COMPANIES_EMPTY = 10001;
     public static final int REGISTRATION_SUCCESS = 1002;
     public static final int ALREADY_REGISTERED = 1003;
     public static final int SERVER_ERROR = 404;
@@ -42,7 +43,17 @@ public class Constants {
     public static final int FACEBOOK_LOGIN_SUCCESS = 1025;
     public static final int FACEBOOK_LOGIN_EMPTY = 1026;
 
+    public static final int UPDATE_CAB_SUCCESS = 1027;
+    public static final int UPDATE_CAB_FAILED = 1028;
 
+    public static final int ALLOW_CABS_SUCCESS = 1029;
+    public static final int ALLOW_CABS_FAILED = 1030;
+
+    public static final int DRIVER_NEARBY_SUCCESS = 1031;
+    public static final int DRIVER_NEARBY_EMPTY = 1032;
+
+    public static final int CHANGE_PASSWORD_SUCCESS = 1033;
+    public static final int CHANGE_PASSWORD_FAILED = 1034;
 
 
     public static final String CANCEL_TRIP = "Are you sure you want to cancel this trip?";

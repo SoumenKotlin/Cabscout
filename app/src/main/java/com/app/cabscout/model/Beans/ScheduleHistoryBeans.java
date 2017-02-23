@@ -5,10 +5,11 @@ package com.app.cabscout.model.Beans;
  */
 
 public class ScheduleHistoryBeans {
-    private String pickup_lat, pickup_lng, drop_lat, drop_lng, dateTime, payment_type, price, car_name;
+    private String pickup_lat, pickup_lng, drop_lat, drop_lng, dateTime, payment_type, price, car_name, pickup_address, drop_address;
 
     public ScheduleHistoryBeans(String pickup_lat, String pickup_lng, String drop_lat, String drop_lng, String dateTime,
-                                String payment_type, String price, String car_name) {
+                                String payment_type, String price, String car_name, String pickup_address, String drop_address) {
+
         this.pickup_lat = pickup_lat;
         this.pickup_lng = pickup_lng;
         this.drop_lat = drop_lat;
@@ -17,6 +18,8 @@ public class ScheduleHistoryBeans {
         this.payment_type = payment_type;
         this.price = price;
         this.car_name = car_name;
+        this.pickup_address = pickup_address;
+        this.drop_address = drop_address;
     }
 
     public String getPickup_lat() {
@@ -49,5 +52,13 @@ public class ScheduleHistoryBeans {
 
     public String getCar_name() {
         return car_name;
+    }
+
+    public String getPickup_address() {
+        return pickup_address;
+    }
+
+    public String getDrop_address() {
+        return drop_address;
     }
 }

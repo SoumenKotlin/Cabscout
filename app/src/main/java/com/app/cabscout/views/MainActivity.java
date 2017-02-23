@@ -30,10 +30,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.cabscout.R;
+import com.app.cabscout.controller.ModelManager;
+import com.app.cabscout.controller.NearbyDriversManager;
 import com.app.cabscout.model.CSPreferences;
 import com.app.cabscout.model.Config;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
+import com.app.cabscout.model.Operations;
 import com.app.cabscout.model.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,9 +47,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static final int MAX_DURATION = 200;
     RelativeLayout timeLayout;
     Intent serviceIntent;
+    String car_type;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -148,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         regularCab.setOnClickListener(this);
         deluxeCab.setOnClickListener(this);
 
+        CSPreferences.putString(activity, "car_type", "1");
+
         initNavigationDrawer();
 
         mLocationRequest = new LocationRequest();
@@ -194,18 +202,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.anyCab:
+                CSPreferences.putString(activity, "car_type", "1");
                 anyCab.setImageResource(R.drawable.ic_icon_any_car_selected);
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car);
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car);
                 break;
 
             case R.id.regularCab:
+                CSPreferences.putString(activity, "car_type", "2");
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car_selected);
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car);
                 anyCab.setImageResource(R.drawable.ic_icon_any_car);
                 break;
 
             case R.id.deluxeCab:
+                CSPreferences.putString(activity, "car_type", "3");
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car_selected);
                 anyCab.setImageResource(R.drawable.ic_icon_any_car);
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car);
@@ -279,6 +290,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
 
+        double latitude = 0, longitude = 0;
+
+        if (!CSPreferences.readString(activity, "source_latitude").isEmpty() ||
+                !CSPreferences.readString(activity, "source_longitude").isEmpty()) {
+             latitude = Double.parseDouble(CSPreferences.readString(activity, "source_latitude"));
+             longitude = Double.parseDouble(CSPreferences.readString(activity, "source_latitude"));
+        }
+
+        car_type = CSPreferences.readString(activity, "car_type");
+
         if (!CSPreferences.readString(activity, "pickup_address").isEmpty()) {
             pickupAddress.setText(CSPreferences.readString(activity, "pickup_address"));
             dropSearch.setVisibility(View.VISIBLE);
@@ -293,8 +314,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .build();
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
 
+                ModelManager.getInstance().getNearbyDriversManager().getNearbyDrivers(this,
+                        Operations.nearbyDriversTask(this, latitude, longitude, car_type));
             }
         }
+
         if (CSPreferences.readString(activity, "drop_address").isEmpty()) {
             dropAddress.setText(R.string.destination);
         }
@@ -303,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dropAddress.setText(R.string.destination);
         }
     }
+
 
     /*public void startService() {
 
@@ -344,6 +369,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case Constants.LOCATION_SUCCESS:
                 getLocation(event.getLatitude(), event.getLongitude());
                 break;
+
+            case Constants.DRIVER_NEARBY_SUCCESS:
+                for (int i=0; i< NearbyDriversManager.latitudeList.size(); i++) {
+                    googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(NearbyDriversManager.latitudeList.get(i), NearbyDriversManager.longitudeList.get(i))))
+                            .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_icon_car));
+                }
+                break;
         }
     }
 
@@ -362,6 +395,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             lat = mLocation.getLatitude();
             lng = mLocation.getLongitude();
         }
+
+        ModelManager.getInstance().getNearbyDriversManager().getNearbyDrivers(this,
+                Operations.nearbyDriversTask(this, lat, lng, CSPreferences.readString(this, "car_type")));
 
         Log.e(TAG, "current location after--- "+ mLocation);
 
@@ -407,6 +443,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 zoomLevel = googleMap.getCameraPosition().zoom;
 
                 latLng = googleMap.getCameraPosition().target;
+
+                ModelManager.getInstance().getNearbyDriversManager().getNearbyDrivers(activity,
+                        Operations.nearbyDriversTask(activity, latLng.latitude, latLng.longitude, car_type));
 
                 CSPreferences.putString(activity, "source_latitude", String.valueOf(latLng.latitude));
                 CSPreferences.putString(activity, "source_longitude", String.valueOf(latLng.longitude));

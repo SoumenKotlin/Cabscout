@@ -232,6 +232,7 @@ public class FacebookLoginManager {
                     String home_address = response.getString("home_address");
                     String work_address = response.getString("work_address");
                     String profile_pic = response.getString("profile_pic");
+                    String allow_drivers = response.getString("allow_search");
 
                     CSPreferences.putString(mContext, "user_email", email);
                     CSPreferences.putString(mContext, "user_name", name);
@@ -239,6 +240,7 @@ public class FacebookLoginManager {
                     CSPreferences.putString(mContext, "add_home", home_address);
                     CSPreferences.putString(mContext, "add_work", work_address);
                     CSPreferences.putString(mContext, "profile_pic", profile_pic);
+                    CSPreferences.putString(mContext, "allow_drivers", allow_drivers);
 
                     EventBus.getDefault().post(new Event(Constants.FACEBOOK_LOGIN_SUCCESS, ""));
                 } catch (JSONException e) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -153,6 +155,7 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
         cash.setOnClickListener(this);
         creditCard.setOnClickListener(this);
         corpAccount.setOnClickListener(this);
+
     }
 
     @Override
@@ -246,6 +249,18 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
 
         gMap = googleMap;
+        try {
+
+            boolean success = gMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+            if (!success) {
+                Log.e("sorry try again", "Style parsing failed.");
+            }
+        }catch (Resources.NotFoundException e){
+            e.printStackTrace();
+        }
+
         gMap.clear();
 
         start = new LatLng(Double.parseDouble(src_lat), Double.parseDouble(src_lng));

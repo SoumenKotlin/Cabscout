@@ -19,12 +19,13 @@
         <activity android:name=".views.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".views.MainActivity" />
-        <activity android:name=".views.ExtraActivity"/>
+        <activity android:name=".views.ExtraActivity" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -34,7 +35,6 @@
 
         <activity android:name=".views.CabCompaniesActivity" />
         <activity android:name=".views.RegistrationActivity" />
-
         <activity android:name=".views.LoginActivity" />
         <activity android:name=".views.SearchAddressActivity" />
         <activity android:name=".views.BookRideActivity" />
@@ -54,7 +54,9 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".views.LoginFacebookActivity" />
-        <activity android:name=".views.CabArrivingActivity"/>
+        <activity android:name=".views.CabArrivingActivity" />
+        <activity android:name=".views.CardPaymentActivity" />
+        <activity android:name=".views.ChangePasswordActivity"></activity>
     </application>
 
 </manifest>

@@ -21,6 +21,9 @@ public class ModelManager {
     private AddHomeManager addHomeManager;
     private AddWorkManager addWorkManager;
     private ImageUploadManager imageUploadManager;
+    private AllowDriversManager allowDriversManager;
+    private NearbyDriversManager nearbyDriversManager;
+    private ChangePasswordManager changePasswordManager;
 
     private static ModelManager modelManager;
 
@@ -40,6 +43,9 @@ public class ModelManager {
         addHomeManager = new AddHomeManager();
         addWorkManager = new AddWorkManager();
         imageUploadManager = new ImageUploadManager();
+        allowDriversManager = new AllowDriversManager();
+        nearbyDriversManager = new NearbyDriversManager();
+        changePasswordManager = new ChangePasswordManager();
     }
 
     public static ModelManager getInstance() {
@@ -103,5 +109,17 @@ public class ModelManager {
 
     public ImageUploadManager getImageUploadManager() {
         return imageUploadManager;
+    }
+
+    public AllowDriversManager getAllowDriversManager() {
+        return allowDriversManager;
+    }
+
+    public NearbyDriversManager getNearbyDriversManager() {
+        return nearbyDriversManager;
+    }
+
+    public ChangePasswordManager getChangePasswordManager() {
+        return changePasswordManager;
     }
 }

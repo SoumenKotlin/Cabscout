@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -14,9 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.app.cabscout.R;
-import com.app.cabscout.controller.ModelManager;
 import com.app.cabscout.model.CSPreferences;
-import com.app.cabscout.model.Operations;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -59,6 +58,12 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            handleSleep();
+            return;
+        }
+
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
             enableLoc();
 
@@ -97,7 +102,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     protected void onResume() {
         super.onResume();
 
-        ModelManager.getInstance().getCabCompaniesManager().getCabCompanies(activity, Operations.getCabCompaniesTask(activity));
     }
 
     private void enableLoc() {

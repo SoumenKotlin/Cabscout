@@ -41,13 +41,15 @@ public class PlaceParser {
 
         @Override
         protected String doInBackground(String... params) {
-            String place_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
 
             HttpHandler httpHandler = new HttpHandler();
             String API_KEY = "AIzaSyCpxjdSXb9v61fadm7mUsmxrggE3KMCQD0";
-            String json = httpHandler.makeServiceCall(place_url + params[0] + "&key=" + API_KEY);
+            String place_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + params[0] + "&key=" + API_KEY;
+
+            String json = httpHandler.makeServiceCall(place_url);
 
             Log.w(TAG, "response-- " + json);
+            Log.e(TAG, "place_url-- "+place_url);
             return json;
         }
 
