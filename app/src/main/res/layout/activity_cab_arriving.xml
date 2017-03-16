@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/card"
             app:cardCornerRadius="10dp"
+            app:cardUseCompatPadding="true"
             android:layout_marginTop="40dp"
             android:orientation="vertical">
 
@@ -158,8 +159,8 @@
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:elevation="10dp"
-            app:civ_border_width="5dp"
-            app:civ_border_color="#fff"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/colorPrimary"
             android:src="@drawable/ic_icon_driver" />
 
     </RelativeLayout>

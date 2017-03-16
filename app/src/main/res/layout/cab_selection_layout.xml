@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        app:cardMaxElevation="0dp"
+        app:cardPreventCornerOverlap="false"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true">
 
@@ -35,6 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        app:cardMaxElevation="0dp"
+        app:cardPreventCornerOverlap="false"
         android:layout_below="@+id/pickUpSearch"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true">

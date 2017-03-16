@@ -37,7 +37,7 @@
                         style="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="#000000"/>
 
-                    <EditText
+                    <com.app.cabscout.model.custom.CreditCardEditText
                         android:id="@+id/editCardNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

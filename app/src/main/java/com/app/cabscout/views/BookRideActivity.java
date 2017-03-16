@@ -19,7 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.cabscout.R;
+import com.app.cabscout.controller.ModelManager;
 import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Constants;
+import com.app.cabscout.model.Event;
+import com.app.cabscout.model.Operations;
 import com.app.cabscout.model.Utils;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -37,7 +41,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -60,7 +70,7 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
 
     protected LatLng start,end;
 
-    private Dialog dialog, promoDialog;
+    private Dialog dialog, promoDialog, bookingDialog;
     LinearLayout promoCodeLayout, paymentLayout;
     TextView promoCode, applyCode, cancel, paymentMethod;
     EditText editPromoCode;
@@ -68,7 +78,9 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
     BottomSheetDialog bottomPromoCode, bottomPaymentMethod;
     TextView cash, creditCard, corpAccount;
     TextView txtBookRide;
-    private double midLat, midLng;
+    // private double midLat, midLng;
+    String pickup_address, drop_address, customer_id, src_latLng, dest_latLng, date, time, carCat;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -92,10 +104,13 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        bookingDialog = Utils.makeDialog(this, R.layout.dialog_booking_ride);
+
        // View v = findViewById(R.id.cabBookLayout);
        // cabSelectionLayout = (RelativeLayout)v.findViewById(R.id.cabBookLayout);
         dialog = Utils.customProgressDialog(this, "Retrieving Path...");
         dialog.show();
+
 
         pickupAddress = (TextView)findViewById(R.id.pickupAddress);
         destinationAddress = (TextView)findViewById(R.id.dropAddress);
@@ -223,15 +238,95 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
                 break;
 
             case R.id.txtBookRide:
+
+                customer_id = CSPreferences.readString(activity, "customer_id");
+                carCat = CSPreferences.readString(activity, "car_type");
+
+                pickup_address = CSPreferences.readString(activity, "pickup_address");
+                drop_address = CSPreferences.readString(activity, "drop_address");
+
+                src_latLng = CSPreferences.readString(activity, "source_latitude") + ","
+                        + CSPreferences.readString(activity, "source_longitude");
+
+                dest_latLng = CSPreferences.readString(activity, "destination_latitude") + ","
+                        + CSPreferences.readString(activity, "destination_longitude");
+
+                Calendar cc = Calendar.getInstance();
+                int year=cc.get(Calendar.YEAR);
+                int month=cc.get(Calendar.MONTH);
+                int mDay = cc.get(Calendar.DAY_OF_MONTH);
+                int mHour = cc.get(Calendar.HOUR);
+                int mMinute = cc.get(Calendar.MINUTE);
+                int a = cc.get(Calendar.AM_PM);
+
+                String timeUnits;
+
+                if (a == Calendar.AM) {
+                    timeUnits = "am";
+                } else {
+                    timeUnits = "pm";
+                }
+
+                date = mDay+"-"+month+"-"+year;
+                time = mHour+":"+mMinute+timeUnits;
+
+                try {
+                    ModelManager.getInstance().getRequestManager().requestRide(activity, Operations.requestRideTask(activity,
+                            customer_id, URLEncoder.encode(pickup_address, "utf-8"),
+                            URLEncoder.encode(drop_address, "utf-8"), carCat, src_latLng, dest_latLng, "0",
+                            URLEncoder.encode(date, "utf-8"), URLEncoder.encode(time, "utf-8"), "0", "100"));
+
+                }  catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                bookingDialog.show();
+                break;
+
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(Event event) {
+        switch (event.getKey()) {
+            case Constants.REQUEST_RIDE_SUCCESS:
+                if (bookingDialog.isShowing()) {
+                    bookingDialog.dismiss();
+                }
+
+                String driver_coordinates = CSPreferences.readString(activity, "driver_coordinates");
+                String[] splitArray = driver_coordinates.split(",");
+                double driver_lat = Double.valueOf(splitArray[splitArray.length -2]);
+                double driver_lng = Double.valueOf(splitArray[splitArray.length -1]);
+
                 Intent intent = new Intent(activity, CabArrivingActivity.class);
-                intent.putExtra("driver_lat", midLat);
-                intent.putExtra("driver_lng", midLng);
+                intent.putExtra("driver_lat", driver_lat);
+                intent.putExtra("driver_lng", driver_lng);
                 intent.putExtra("customer_lat", src_lat);
                 intent.putExtra("customer_lng", src_lng);
                 startActivity(intent);
                 finish();
                 break;
 
+            case Constants.REQUEST_RIDE_FAILED:
+                break;
+
+            case Constants.SERVER_ERROR:
+                break;
         }
     }
 
@@ -289,8 +384,8 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int j) {
-         midLat = (Double.parseDouble(src_lat)+Double.parseDouble(dest_lat))/2;
-         midLng = (Double.parseDouble(src_lng)+Double.parseDouble(dest_lng))/2;
+      //   midLat = (Double.parseDouble(src_lat)+Double.parseDouble(dest_lat))/2;
+      //   midLng = (Double.parseDouble(src_lng)+Double.parseDouble(dest_lng))/2;
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;

@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         regularCab.setOnClickListener(this);
         deluxeCab.setOnClickListener(this);
 
-        CSPreferences.putString(activity, "car_type", "1");
+        CSPreferences.putString(activity, "car_type", "0");
 
         initNavigationDrawer();
 
@@ -202,21 +202,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.anyCab:
-                CSPreferences.putString(activity, "car_type", "1");
+                CSPreferences.putString(activity, "car_type", "0");
                 anyCab.setImageResource(R.drawable.ic_icon_any_car_selected);
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car);
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car);
                 break;
 
             case R.id.regularCab:
-                CSPreferences.putString(activity, "car_type", "2");
+                CSPreferences.putString(activity, "car_type", "1");
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car_selected);
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car);
                 anyCab.setImageResource(R.drawable.ic_icon_any_car);
                 break;
 
             case R.id.deluxeCab:
-                CSPreferences.putString(activity, "car_type", "3");
+                CSPreferences.putString(activity, "car_type", "2");
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car_selected);
                 anyCab.setImageResource(R.drawable.ic_icon_any_car);
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car);
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Picasso.with(this)
                 .load(profile_pic)
-                .placeholder(R.drawable.ic_icon_profile_pic)
+                .placeholder(R.drawable.ic__contact_picture_placeholder)
                 .into(customerImage);
 
         Log.e(TAG, "profile_pic url-- "+profile_pic);
@@ -584,6 +584,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //If permission is granted
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                SupportMapFragment mapFragment =
+                        (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                mapFragment.getMapAsync(this);
+            } else {
                 SupportMapFragment mapFragment =
                         (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                 mapFragment.getMapAsync(this);

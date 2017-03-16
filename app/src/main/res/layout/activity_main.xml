@@ -98,7 +98,7 @@
         android:background="#FFCC3A"
         app:itemTextAppearance="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
         app:itemIconTint="#ffffff"
-        app:itemTextColor="@android:color/black"
+        app:itemTextColor="@android:color/white"
         app:headerLayout="@layout/nav_header_layout"
         app:menu="@menu/nav_bar_menu"/>
 </android.support.v4.widget.DrawerLayout>

@@ -19,7 +19,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_icon_profile_pic"
+            android:src="@drawable/ic__contact_picture_placeholder"
             app:civ_border_color="@color/colorPrimaryDark"/>
 
         <TextView

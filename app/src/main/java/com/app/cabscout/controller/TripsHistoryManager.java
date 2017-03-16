@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.app.cabscout.model.Beans.TripsHistoryBeans;
+import com.app.cabscout.model.Config;
 import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 
@@ -68,7 +69,9 @@ public class TripsHistoryManager {
                         String datetime = data.getString("datetime");
                         String price = data.getString("price");
                         String driver_name = data.getString("driver_name");
-                        String profile_pic = data.getString("profile_pic");
+                        String profile_pic = Config.user_pic_url+data.getString("profile_pic");
+
+                        Log.e(TAG, "user_pic-url -- "+profile_pic);
 
                         TripsHistoryBeans tripsHistoryBeans = new TripsHistoryBeans(requestId, pickup_location, drop_location,
                                 datetime, price, driver_name, profile_pic);

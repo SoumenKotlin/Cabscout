@@ -36,4 +36,5 @@
     <string name="schedule_regular">Schedule Regular Car</string>
     <string name="schedule_any">Schedule Any Car</string>
     <string name="facebook_app_id">1797838420540108</string>
+    <string name="pick_image_intent_text">Update Image</string>
 </resources>

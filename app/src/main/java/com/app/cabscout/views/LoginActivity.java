@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.app.cabscout.model.Utils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -70,6 +72,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         textLogin = (TextView)findViewById(R.id.textLogin);
         textLogin.setOnClickListener(this);
         fbLogin.setOnClickListener(this);
+
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+        Log.e(TAG, "device token: " +deviceToken);
+
+        CSPreferences.putString(activity, "device_token", deviceToken);
     }
 
     @Override

@@ -31,13 +31,11 @@ import com.app.cabscout.model.Constants;
 import com.app.cabscout.model.Event;
 import com.app.cabscout.model.Operations;
 import com.app.cabscout.model.Utils;
+import com.app.cabscout.model.custom.ImagePicker;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -108,7 +106,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         if (!profile_pic.isEmpty()) {
             Picasso.with(activity)
                     .load(profile_pic)
-                    .placeholder(R.drawable.ic_icon_profile_pic)
+                    .placeholder(R.drawable.ic__contact_picture_placeholder)
                     .into(showImage);
         }
 
@@ -194,7 +192,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
 
             case R.id.updateImage:
-                changePicBottomSheet(bottomSheetDialog);
+               // changePicBottomSheet(bottomSheetDialog);
+                Intent chooseImageIntent = ImagePicker.getPickImageIntent(activity);
+                startActivityForResult(chooseImageIntent, 100);
+
                 break;
 
             case R.id.openCamera:
@@ -275,6 +276,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+
+
     public void addHome() {
         Intent homeIntent = new Intent(activity, SearchAddressActivity.class);
         homeIntent.putExtra("Address", "Add Home");
@@ -292,38 +295,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if (requestCode == 100 && resultCode == RESULT_OK) {
 
-            Bundle extras = data.getExtras();
-            photo = (Bitmap) extras.get("data");
+      //      Bundle extras = data.getExtras();
+            photo = ImagePicker.getImageFromResult(this, resultCode, data);
+
+        //    photo = (Bitmap) extras.get("data");
 
             String base64Image = Utils.base64Encode(photo);
             dialog.show();
 
-            try {
-                ModelManager.getInstance().getImageUploadManager().uploadImageToServer(activity,
-                        Operations.updateProfileImage(activity, customer_id, URLEncoder.encode(base64Image, "utf-8")));
+                ModelManager.getInstance().getImageUploadManager().uploadImageToServer(activity, Config.update_profile_pic_url ,
+                        Operations.updateProfileImage(activity, customer_id, base64Image));
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
         }
-
-        /*else if (requestCode == 200 && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            photo = (Bitmap) extras.get("data");
-
-            String base64Image = Utils.base64Encode(photo);
-
-            dialog.show();
-
-            try {
-                ModelManager.getInstance().getImageUploadManager().uploadImageToServer(activity,
-                        Operations.updateProfileImage(activity, customer_id, URLEncoder.encode(base64Image, "utf-8")));
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-        }*/
     }
 
     @Override
@@ -430,6 +413,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void showData() {
         home = CSPreferences.readString(activity, "add_home");
         work = CSPreferences.readString(activity, "add_work");
+        profile_pic = CSPreferences.readString(activity, "profile_pic");
+
+        if (!profile_pic.startsWith("http")) {
+            profile_pic = Config.user_pic_url+profile_pic;
+        }
+
+        if (!profile_pic.isEmpty()) {
+            Picasso.with(activity)
+                    .load(profile_pic)
+                    .placeholder(R.drawable.ic__contact_picture_placeholder)
+                    .into(showImage);
+        }
 
         if (home.isEmpty()) {
             homeLayout.setVisibility(View.GONE);

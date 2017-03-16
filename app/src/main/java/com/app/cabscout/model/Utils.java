@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.cabscout.R;
@@ -246,6 +247,7 @@ public class Utils {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(layout);
         dialog.setCancelable(false);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         return dialog;
@@ -406,5 +408,6 @@ public class Utils {
         }).create().show();
 
     }
+
 
 }

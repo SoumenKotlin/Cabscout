@@ -99,8 +99,6 @@ public class Operations {
         Log.e(TAG, "request_ride params-- "+ params);
 
         return params;
-
-
     }
 
     public static String getScheduledRides(Context context, String customer_id) {
@@ -144,11 +142,30 @@ public class Operations {
     }
 
     public static String updateProfileImage(Context context, String customer_id, String base64) {
-        String params = Config.update_profile_pic_url+customer_id+"&profile_pic="+base64;
+        try {
+            JSONObject postDataParams = new JSONObject();
+            postDataParams.put("customer_id", customer_id);
+            postDataParams.put("profile_pic", base64);
+
+            String params = null;
+            try {
+                params = Utils.getPostDataString(postDataParams);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Log.e(TAG, "update_image params-- "+params);
+
+            return params;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+       /* String params = Config.update_profile_pic_url+customer_id+"&profile_pic="+base64;
 
         Log.e(TAG, "update_image params-- "+params);
 
-        return params;
+        return params;*/
     }
 
     public static String getUserDetails(Context context, String customer_id) {
@@ -179,6 +196,14 @@ public class Operations {
         String params = Config.change_password_url+customer_id+"&oldpassword="+oldPassword+"&newpassword="+newPassword;
 
         Log.e(TAG, "change_password params-- "+params);
+
+        return params;
+    }
+
+    public static String requestAcceptedTask(Context context, String customer_id) {
+        String params = Config.driver_details_url+customer_id;
+
+        Log.e(TAG, "driver_details_params-- "+params);
 
         return params;
     }

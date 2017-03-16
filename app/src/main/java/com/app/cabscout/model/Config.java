@@ -23,7 +23,7 @@ public class Config {
     static final String schedule_history_url = BASE_URL + "schedule_history&customer_id=";
     static final String trips_history_url = BASE_URL+"trip_history&customer_id=";
     static final String user_details_url = BASE_URL+"user_detail&customer_id=";
-    static final String update_profile_pic_url = BASE_URL+"update_profile_pic&customer_id=";
+    public static final String update_profile_pic_url = BASE_URL+"update_profile_pic";
     static final String update_home_details_url = BASE_URL+"updateHomeDetail";
 
     static final String update_work_details_url = BASE_URL+"updateWorkDetail";
@@ -32,4 +32,5 @@ public class Config {
     static final String change_cab_url = BASE_URL+"updateCabCompany&customer_id=";
     static final String allow_drivers_url = BASE_URL+"allow_other_drivers&customer_id=";
     static final String change_password_url = BASE_URL+"reset_password&customer_id=";
+    static final String driver_details_url = BASE_URL+"get_driver_list&customer_id=";
 }

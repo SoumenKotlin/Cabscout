@@ -46,7 +46,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.cardPayment:
                 Intent intent = new Intent(activity, CardPaymentActivity.class);
                 startActivity(intent);

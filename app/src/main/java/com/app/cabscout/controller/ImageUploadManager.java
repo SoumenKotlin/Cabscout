@@ -19,8 +19,8 @@ import org.json.JSONObject;
 public class ImageUploadManager {
     private static final String TAG = ImageUploadManager.class.getSimpleName();
 
-    public void uploadImageToServer(Context context, String params) {
-        new ExecuteApi(context).execute(params);
+    public void uploadImageToServer(Context context, String url, String params) {
+        new ExecuteApi(context).execute(url, params);
     }
 
     private class ExecuteApi extends AsyncTask<String, String, String>{
@@ -33,7 +33,8 @@ public class ImageUploadManager {
         @Override
         protected String doInBackground(String... strings) {
             HttpHandler httpHandler = new HttpHandler();
-            String response = httpHandler.makeServiceCall(strings[0]);
+
+            String response = httpHandler.getResponse(strings[0], strings[1]);
 
             Log.e(TAG, "upload_image response-- "+response);
             return response;

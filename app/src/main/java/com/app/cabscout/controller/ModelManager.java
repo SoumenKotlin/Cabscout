@@ -15,7 +15,7 @@ public class ModelManager {
     private LocationDirectionManager locationDirectionManager;
     private LocationService locationService;
     private DateTimeManager dateTimeManager;
-    private RequestManager requestManager;
+    private RequestRideManager requestManager;
     private ScheduleHistoryManager scheduleHistoryManager;
     private TripsHistoryManager tripsHistoryManager;
     private AddHomeManager addHomeManager;
@@ -37,7 +37,7 @@ public class ModelManager {
         locationDirectionManager = new LocationDirectionManager();
         locationService = new LocationService();
         dateTimeManager = new DateTimeManager();
-        requestManager = new RequestManager();
+        requestManager = new RequestRideManager();
         scheduleHistoryManager = new ScheduleHistoryManager();
         tripsHistoryManager = new TripsHistoryManager();
         addHomeManager = new AddHomeManager();
@@ -87,7 +87,7 @@ public class ModelManager {
         return dateTimeManager;
     }
 
-    public RequestManager getRequestManager() {
+    public RequestRideManager getRequestManager() {
         return requestManager;
     }
 

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.app.cabscout.R;
 import com.app.cabscout.model.Beans.TripsHistoryBeans;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,10 @@ public class TripsHistoryAdapter extends RecyclerView.Adapter<TripsHistoryAdapte
         holder.pickupLocation.setText(tripsHistoryBeans.getPickup_location());
         holder.dropLocation.setText(tripsHistoryBeans.getDrop_location());
 
-        /* Picasso.with(context).load(tripsHistoryBeans.getProfile_pic()).into(holder.imageView); */
+         Picasso.with(context)
+                 .load(tripsHistoryBeans.getProfile_pic())
+                 .placeholder(R.color.teal_A700)
+                 .into(holder.imageView);
     }
 
     @Override
