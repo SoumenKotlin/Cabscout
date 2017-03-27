@@ -235,6 +235,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         }
 
         try {
+            dialog.show();
             ModelManager.getInstance().getRequestManager().requestRide(activity, Operations.requestRideTask(activity,
                     customer_id, URLEncoder.encode(pickup_address, "utf-8"),
                     URLEncoder.encode(drop_address, "utf-8"), carCat, src_latLng, dest_latLng, "1",
@@ -243,7 +244,6 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
         }  catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        dialog.show();
     }
 
     @Override
@@ -282,7 +282,7 @@ public class ScheduleActivity extends AppCompatActivity implements View.OnClickL
                 dropLocation.setText(CSPreferences.readString(activity, "drop_address"));
                 break;
 
-            case Constants.REQUEST_RIDE_SUCCESS:
+            case Constants.SCHEDULE_RIDE_SUCCESS:
                 dialog.dismiss();
                 Toast.makeText(activity, "Your request has been submitted successfully", Toast.LENGTH_SHORT).show();
                 break;

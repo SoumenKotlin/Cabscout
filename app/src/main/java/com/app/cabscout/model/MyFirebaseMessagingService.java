@@ -15,6 +15,7 @@ import com.app.cabscout.views.MainActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,10 +40,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String noti_type = jsonObject.getString("noti_type");
             String id = jsonObject.getString("id");
 
-            if (noti_type.equals("driver_request")) {
-                ModelManager.getInstance().getRequestManager().acceptedRequest(getApplicationContext(),
-                        Operations.requestAcceptedTask(getApplicationContext(), id));
+            switch (noti_type) {
+                case "driver_request":
+                    ModelManager.getInstance().getRequestManager().acceptedRequest(getApplicationContext(),
+                            Operations.requestAcceptedTask(getApplicationContext(), id));
 
+                    break;
+
+                case "cancel_ride":
+                    EventBus.getDefault().post(new Event(Constants.CANCELLED_REQUEST_SUCCESS, ""));
+                    break;
+
+                case "trip_started":
+                    EventBus.getDefault().post(new Event(Constants.TRIP_START_SUCCESS, ""));
+                    break;
+
+                case "trip_completed":
+                    EventBus.getDefault().post(new Event(Constants.TRIP_STOP_SUCCESS, ""));
+                    break;
             }
 
         } catch (JSONException ex) {

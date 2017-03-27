@@ -24,6 +24,7 @@ public class ModelManager {
     private AllowDriversManager allowDriversManager;
     private NearbyDriversManager nearbyDriversManager;
     private ChangePasswordManager changePasswordManager;
+    private CancelRequestManager cancelRequestManager;
 
     private static ModelManager modelManager;
 
@@ -46,6 +47,7 @@ public class ModelManager {
         allowDriversManager = new AllowDriversManager();
         nearbyDriversManager = new NearbyDriversManager();
         changePasswordManager = new ChangePasswordManager();
+        cancelRequestManager = new CancelRequestManager();
     }
 
     public static ModelManager getInstance() {
@@ -121,5 +123,9 @@ public class ModelManager {
 
     public ChangePasswordManager getChangePasswordManager() {
         return changePasswordManager;
+    }
+
+    public CancelRequestManager getCancelRequestManager() {
+        return cancelRequestManager;
     }
 }

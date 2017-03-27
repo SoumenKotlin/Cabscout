@@ -24,6 +24,7 @@ public class Constants {
     public static final int TIME_SUCCESS = 1012;
 
     public static final int REQUEST_RIDE_SUCCESS = 1013;
+    public static final int SCHEDULE_RIDE_SUCCESS = 10013;
     public static final int REQUEST_RIDE_FAILED = 1014;
 
     public static final int SCHEDULED_HISTORY_SUCCESS = 1015;
@@ -55,6 +56,11 @@ public class Constants {
     public static final int CHANGE_PASSWORD_SUCCESS = 1033;
     public static final int CHANGE_PASSWORD_FAILED = 1034;
 
+    public static final int CANCELLED_REQUEST_SUCCESS = 1035;
+    public static final int CANCELLED_REQUEST_ERROR = 1036;
+
+    public static final int TRIP_START_SUCCESS = 1037;
+    public static final int TRIP_STOP_SUCCESS = 1038;
 
     public static final String CANCEL_TRIP = "Are you sure you want to cancel this trip?";
 

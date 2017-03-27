@@ -302,22 +302,18 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Subscribe
     public void onEvent(Event event) {
+
         switch (event.getKey()) {
             case Constants.REQUEST_RIDE_SUCCESS:
+
                 if (bookingDialog.isShowing()) {
                     bookingDialog.dismiss();
                 }
-
-                String driver_coordinates = CSPreferences.readString(activity, "driver_coordinates");
-                String[] splitArray = driver_coordinates.split(",");
-                double driver_lat = Double.valueOf(splitArray[splitArray.length -2]);
-                double driver_lng = Double.valueOf(splitArray[splitArray.length -1]);
+/*
+                CSPreferences.putString(activity, "customer_lat", src_lat);
+                CSPreferences.putString(activity, "customer_lng", src_lng);*/
 
                 Intent intent = new Intent(activity, CabArrivingActivity.class);
-                intent.putExtra("driver_lat", driver_lat);
-                intent.putExtra("driver_lng", driver_lng);
-                intent.putExtra("customer_lat", src_lat);
-                intent.putExtra("customer_lng", src_lng);
                 startActivity(intent);
                 finish();
                 break;
@@ -443,5 +439,12 @@ public class BookRideActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onRoutingCancelled() {
         dialog.dismiss();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        bookingDialog.dismiss();
     }
 }

@@ -100,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         updateImage = (ImageView) findViewById(R.id.updateImage);
 
         if (!profile_pic.startsWith("http")) {
-            profile_pic = Config.user_pic_url+profile_pic;
+            profile_pic = Config.user_pic_url + profile_pic;
         }
 
         if (!profile_pic.isEmpty()) {
@@ -140,14 +140,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         bottomSheetDialog = Utils.createBottomSheetDialog(this, R.layout.bottom_update_photo);
 
-        changeCarCompany = (TextView)findViewById(R.id.changeCarCompany);
+        changeCarCompany = (TextView) findViewById(R.id.changeCarCompany);
         changeCarCompany.setOnClickListener(this);
         cabBottomDialog = Utils.createBottomSheetDialog(this, R.layout.bottom_car_company_change);
 
         allowCabCheckBox = (CheckBox) findViewById(R.id.allowCabCheckBox);
         allowCabCheckBox.setOnCheckedChangeListener(this);
 
-        changePassword = (TextView)findViewById(R.id.changePassword);
+        changePassword = (TextView) findViewById(R.id.changePassword);
         changePassword.setOnClickListener(this);
     }
 
@@ -192,13 +192,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
 
             case R.id.updateImage:
-               // changePicBottomSheet(bottomSheetDialog);
-                Intent chooseImageIntent = ImagePicker.getPickImageIntent(activity);
-                startActivityForResult(chooseImageIntent, 100);
+                // changePicBottomSheet(bottomSheetDialog);
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+
 
                 break;
 
-            case R.id.openCamera:
+               /* case R.id.openCamera:
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                 str_pic = "camera";
@@ -206,13 +207,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 break;
 
-            case R.id.openGallery:
+                  case R.id.openGallery:
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                 str_pic = "gallery";
                 bottomSheetDialog.dismiss();
                 //Utils.openGallery(activity);
-                break;
+                break; */
 
             case R.id.addHome: {
                 addHome();
@@ -277,34 +278,33 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-
     public void addHome() {
         Intent homeIntent = new Intent(activity, SearchAddressActivity.class);
         homeIntent.putExtra("Address", "Add Home");
         startActivity(homeIntent);
     }
 
-     public void addWork() {
-         Intent workIntent = new Intent(activity, SearchAddressActivity.class);
-         workIntent.putExtra("Address", "Add Work");
-         startActivity(workIntent);
-     }
+    public void addWork() {
+        Intent workIntent = new Intent(activity, SearchAddressActivity.class);
+        workIntent.putExtra("Address", "Add Work");
+        startActivity(workIntent);
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         customer_id = CSPreferences.readString(activity, "customer_id");
 
         if (requestCode == 100 && resultCode == RESULT_OK) {
 
-      //      Bundle extras = data.getExtras();
+            //      Bundle extras = data.getExtras();
             photo = ImagePicker.getImageFromResult(this, resultCode, data);
 
-        //    photo = (Bitmap) extras.get("data");
+            //    photo = (Bitmap) extras.get("data");
 
             String base64Image = Utils.base64Encode(photo);
             dialog.show();
 
-                ModelManager.getInstance().getImageUploadManager().uploadImageToServer(activity, Config.update_profile_pic_url ,
-                        Operations.updateProfileImage(activity, customer_id, base64Image));
+            ModelManager.getInstance().getImageUploadManager().uploadImageToServer(activity, Config.update_profile_pic_url,
+                    Operations.updateProfileImage(activity, customer_id, base64Image));
 
         }
     }
@@ -322,7 +322,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         EventBus.getDefault().unregister(this);
     }
-
 
 
     @Subscribe
@@ -403,7 +402,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
 
-       // showData();
+        // showData();
         customer_id = CSPreferences.readString(activity, "customer_id");
         dialog.show();
 
@@ -416,7 +415,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         profile_pic = CSPreferences.readString(activity, "profile_pic");
 
         if (!profile_pic.startsWith("http")) {
-            profile_pic = Config.user_pic_url+profile_pic;
+            profile_pic = Config.user_pic_url + profile_pic;
         }
 
         if (!profile_pic.isEmpty()) {
@@ -452,12 +451,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             //If permission is granted
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                if (str_pic.equals("camera")) {
+                /*if (str_pic.equals("camera")) {
                     Utils.openCamera(activity);
                 } else if (str_pic.equals("gallery")) {
                     //Utils.openGallery(activity);
                     Toast.makeText(activity, "Working on it..", Toast.LENGTH_SHORT).show();
-                }
+                }*/
+                Intent chooseImageIntent = ImagePicker.getPickImageIntent(activity);
+                startActivityForResult(chooseImageIntent, 100);
             } else {
                 Toast.makeText(activity, "Please grant all the permissions first.", Toast.LENGTH_SHORT).show();
             }

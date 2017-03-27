@@ -20,6 +20,7 @@ public class Config {
 
     static final String nearby_drivers_url = BASE_URL+"get_drivers";
     static final String request_ride_url = BASE_URL+"request_driver";
+    static final String cancel_request_url = BASE_URL+"cancelRide&customer_id=";
     static final String schedule_history_url = BASE_URL + "schedule_history&customer_id=";
     static final String trips_history_url = BASE_URL+"trip_history&customer_id=";
     static final String user_details_url = BASE_URL+"user_detail&customer_id=";

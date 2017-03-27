@@ -10,134 +10,134 @@
         android:id="@+id/toolbar"/>
 
 
-        <android.support.v7.widget.CardView
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:cardElevation="5dp"
+        android:layout_margin="20dp"
+        app:cardCornerRadius="5dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardElevation="5dp"
-            android:layout_margin="20dp"
-            app:cardCornerRadius="5dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Card number"
+                    android:textAllCaps="true"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000"/>
+
+                <com.app.cabscout.model.custom.CreditCardEditText
+                    android:id="@+id/editCardNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter card number"
+                    android:inputType="number"
+                    android:maxLength="16"
+                    android:layout_marginTop="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Card holder name"
+                    android:layout_marginTop="30dp"
+                    android:textAllCaps="true"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000"/>
+
+                <EditText
+                    android:id="@+id/editCardName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name on Card"
+                    android:inputType="text"
+                    android:layout_marginTop="10dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Card number"
-                        android:textAllCaps="true"
-                        style="@style/Base.TextAppearance.AppCompat.Medium"
-                        android:textColor="#000000"/>
-
-                    <com.app.cabscout.model.custom.CreditCardEditText
-                        android:id="@+id/editCardNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Enter card number"
-                        android:inputType="number"
-                        android:maxLength="16"
-                        android:layout_marginTop="10dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Card holder name"
-                        android:layout_marginTop="30dp"
-                        android:textAllCaps="true"
-                        style="@style/Base.TextAppearance.AppCompat.Medium"
-                        android:textColor="#000000"/>
-
-                    <EditText
-                        android:id="@+id/editCardName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Name on Card"
-                        android:inputType="text"
-                        android:layout_marginTop="10dp"/>
+                    android:orientation="horizontal"
+                    android:layout_marginTop="30dp"
+                    android:baselineAligned="false">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="30dp"
-                        android:baselineAligned="false">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Expiry Date"
-                                android:textAllCaps="true"
-                                style="@style/Base.TextAppearance.AppCompat.Medium"
-                                android:textColor="#000000"/>
-
-                            <EditText
-                                android:id="@+id/editCardExpiry"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="mm/yyyy"
-                                android:inputType="date"
-                                android:maxLength="7"
-                                android:layout_marginTop="10dp"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginStart="30dp"
-                            android:layout_weight="1">
+                            android:text="Expiry Date"
+                            android:textAllCaps="true"
+                            style="@style/Base.TextAppearance.AppCompat.Medium"
+                            android:textColor="#000000"/>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="CVV"
-                                android:textAllCaps="true"
-                                style="@style/Base.TextAppearance.AppCompat.Medium"
-                                android:textColor="#000000"/>
+                        <EditText
+                            android:id="@+id/editCardExpiry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="mm/yyyy"
+                            android:inputType="date"
+                            android:maxLength="7"
+                            android:layout_marginTop="10dp"/>
 
-                            <EditText
-                                android:id="@+id/editCardCVV"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="000"
-                                android:maxLength="3"
-                                android:inputType="number"
-                                android:layout_marginTop="10dp"/>
+                    </LinearLayout>
 
-                        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CVV"
+                            android:textAllCaps="true"
+                            style="@style/Base.TextAppearance.AppCompat.Medium"
+                            android:textColor="#000000"/>
+
+                        <EditText
+                            android:id="@+id/editCardCVV"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="000"
+                            android:maxLength="3"
+                            android:inputType="number"
+                            android:layout_marginTop="10dp"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/clickPay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Pay Now"
-                    android:padding="20dp"
-                    android:gravity="center"
-                    android:textColor="#000000"
-                    android:background="@color/colorPrimary"/>
-
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/clickPay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Paymetn Method"
+                android:padding="20dp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:background="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

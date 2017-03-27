@@ -6,6 +6,9 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /*
  * Created by rishav on 17/1/17.
  */
@@ -97,6 +100,20 @@ public class Operations {
                 "&payment_type="+payment_type+"&price="+price;
 
         Log.e(TAG, "request_ride params-- "+ params);
+
+        return params;
+    }
+
+    public static String cancelRequestTask(Context context, String customer_id, String request_id, String reason) {
+        String params = null;
+        try {
+
+            params = Config.cancel_request_url + customer_id + "&ride_request_id=" + request_id +
+                    "&reason_for_cancel=" + URLEncoder.encode(reason, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "cance_request params-- "+params);
 
         return params;
     }

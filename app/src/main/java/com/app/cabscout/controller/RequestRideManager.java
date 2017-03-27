@@ -53,7 +53,7 @@ public class RequestRideManager {
                     String id = responseObject.getString("id");
 
                     if (id.equals("1")) {
-                       // EventBus.getDefault().post(new Event(Constants.REQUEST_RIDE_SUCCESS, ""));
+                        EventBus.getDefault().post(new Event(Constants.SCHEDULE_RIDE_SUCCESS, ""));
                     }
                     else {
                         EventBus.getDefault().post(new Event(Constants.REQUEST_RIDE_FAILED, ""));
@@ -97,7 +97,10 @@ public class RequestRideManager {
                 try {
                     JSONObject jsonObject = new JSONObject(s);
                     JSONObject response = jsonObject.getJSONObject("response");
-                    String driver_coordinates = response.getString("pickup_cordinates");
+
+                    String driver_coordinates = response.getString("driver_cordinates");
+                    String ride_request_id = response.getString("ride_request_id");
+
                     String driver_name = response.getString("name");
                     String profile_pic = response.getString("profile_pic");
                     String mobile = response.getString("mobile");
@@ -106,6 +109,7 @@ public class RequestRideManager {
                     CSPreferences.putString(mContext, "driver_name", driver_name);
                     CSPreferences.putString(mContext, "driver_profile_pic", profile_pic);
                     CSPreferences.putString(mContext, "driver_mobile", mobile);
+                    CSPreferences.putString(mContext, "ride_request_id", ride_request_id);
 
                     EventBus.getDefault().post(new Event(Constants.REQUEST_RIDE_SUCCESS, ""));
 

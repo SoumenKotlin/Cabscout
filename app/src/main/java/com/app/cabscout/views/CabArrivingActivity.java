@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.cabscout.R;
+import com.app.cabscout.controller.ModelManager;
+import com.app.cabscout.model.CSPreferences;
+import com.app.cabscout.model.Config;
+import com.app.cabscout.model.Constants;
+import com.app.cabscout.model.Event;
+import com.app.cabscout.model.Operations;
 import com.app.cabscout.model.Utils;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -35,27 +42,37 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import static com.app.cabscout.model.CSPreferences.readString;
 
 @SuppressLint("NewApi")
 public class CabArrivingActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener,
         View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private static final String TAG = CabArrivingActivity.class.getSimpleName();
-    double driver_lat, driver_lng, customer_lat, customer_lng;
+    double driver_lat, driver_lng, source_lat, source_lng, dest_lat, dest_lng;
+    String driver_profile_pic, driver_mobile, driver_name;
     private GoogleMap gMap;
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{R.color.colorAccent,R.color.colorAccent,
             R.color.colorAccent,R.color.colorAccent,R.color.colorAccent};
 
     protected LatLng start,end;
-    TextView cancelRide;
+    TextView cancelRide, driverName, carType, callDriver;
+    CircleImageView driverPic;
     AppCompatActivity activity = this;
-    Dialog dialog;
+    Dialog dialog, cancelRequestDialog;
     ArrayList<String> reasonsList;
     RadioButton radioButton;
     String cancelReason;
@@ -82,17 +99,50 @@ public class CabArrivingActivity extends AppCompatActivity implements OnMapReady
         polylines = new ArrayList<>();
         reasonsList = new ArrayList<>();
 
-        Intent intent = getIntent();
-        driver_lat = intent.getDoubleExtra("driver_lat", 0);
-        driver_lng = intent.getDoubleExtra("driver_lng", 0);
-        customer_lat = Double.parseDouble(intent.getStringExtra("customer_lat"));
-        customer_lng = Double.parseDouble(intent.getStringExtra("customer_lng"));
+        driverName = (TextView)findViewById(R.id.driverName);
+        callDriver = (TextView)findViewById(R.id.callDriver);
+        carType = (TextView)findViewById(R.id.carType);
+        driverPic = (CircleImageView)findViewById(R.id.driverPic);
+
+        source_lat = Double.parseDouble(CSPreferences.readString(activity, "source_latitude"));
+        source_lng = Double.parseDouble(CSPreferences.readString(activity, "source_longitude"));
+        dest_lat = Double.parseDouble(CSPreferences.readString(activity, "destination_latitude"));
+        dest_lng = Double.parseDouble(CSPreferences.readString(activity, "destination_longitude"));
+
+        String driver_coordinates = CSPreferences.readString(activity, "driver_coordinates");
+        String[] splitArray = driver_coordinates.split(",");
+        driver_lat = Double.valueOf(splitArray[splitArray.length -2]);
+        driver_lng = Double.valueOf(splitArray[splitArray.length -1]);
+
+        driver_name = readString(activity, "driver_name");
+        driver_profile_pic = readString(activity, "driver_profile_pic");
+        driver_mobile = readString(activity, "driver_mobile");
 
         cancelRide = (TextView)findViewById(R.id.cancelRide);
         cancelRide.setOnClickListener(this);
 
         start = new LatLng(driver_lat, driver_lng);
-        end = new LatLng(customer_lat, customer_lng);
+        end = new LatLng(source_lat, source_lng);
+        String car_type = CSPreferences.readString(this, "car_type");
+
+        switch (car_type) {
+            case "0":
+                car_type = "Any Car";
+                break;
+
+            case "1":
+                car_type = "Regular Car";
+                break;
+
+            case "2":
+                car_type = "Deluxe Car";
+                break;
+        }
+
+        driverName.setText(driver_name);
+        carType.setText(car_type);
+        Picasso.with(this).load(Config.user_pic_url+driver_profile_pic).into(driverPic);
+        callDriver.setOnClickListener(this);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -143,6 +193,12 @@ public class CabArrivingActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.callDriver:
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+driver_mobile));
+                startActivity(intent);
+                break;
+
             case R.id.cancelRide:
                 //Utils.showAlert(activity, Constants.CANCEL_TRIP);
                 showDialog();
@@ -158,8 +214,77 @@ public class CabArrivingActivity extends AppCompatActivity implements OnMapReady
                     Toast.makeText(activity, "Please select any of the reason", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                dialog.dismiss();
-                Toast.makeText(activity, cancelReason, Toast.LENGTH_SHORT).show();
+
+                String ride_request_id = CSPreferences.readString(activity, "ride_request_id");
+                String customer_id = CSPreferences.readString(activity, "customer_id");
+
+                ModelManager.getInstance().getCancelRequestManager().cancelRequest(activity,
+                        Operations.cancelRequestTask(activity, customer_id, ride_request_id, cancelReason));
+
+                cancelRequestDialog = Utils.customProgressDialog(this, "Canceling your request...");
+                cancelRequestDialog.show();
+
+                break;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(Event event) {
+        if (dialog != null && dialog.isShowing())
+            dialog.dismiss();
+
+        if (cancelRequestDialog != null && cancelRequestDialog.isShowing())
+            cancelRequestDialog.dismiss();
+
+        switch (event.getKey()) {
+
+            case Constants.CANCELLED_REQUEST_SUCCESS:
+               //Toast.makeText(getApplicationContext(), "Request has been cancelled successfully", Toast.LENGTH_SHORT).show();
+                finish();
+                break;
+
+            case Constants.CANCELLED_REQUEST_ERROR:
+                Toast.makeText(activity, "Unable to process your request. Please try again.", Toast.LENGTH_SHORT).show();
+                break;
+
+            case Constants.TRIP_START_SUCCESS:
+
+                gMap.clear();
+                start = new LatLng(source_lat, source_lng);
+                end = new LatLng(dest_lat, dest_lng);
+
+                Routing routing = new Routing.Builder()
+                        .travelMode(Routing.TravelMode.DRIVING)
+                        .withListener(this)
+                        .waypoints(start, end)
+                        .build();
+                routing.execute();
+
+                break;
+
+            case Constants.TRIP_STOP_SUCCESS:
                 finish();
                 break;
         }
@@ -190,22 +315,17 @@ public class CabArrivingActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    public void onRoutingFailure(RouteException e) {
-
-    }
-
-    @Override
-    public void onRoutingStart() {
-
-    }
-
-    @Override
     public void onRoutingSuccess(ArrayList<Route> route, int j) {
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.20);
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(start);
         builder.include(end);
         LatLngBounds bounds = builder.build();
-        gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
 
         if(polylines.size()>0) {
             for (Polyline poly : polylines) {
@@ -248,9 +368,20 @@ public class CabArrivingActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
+    public void onRoutingFailure(RouteException e) {
+        Toast.makeText(activity, "Invalid request", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
     public void onRoutingCancelled() {
 
     }
+
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {

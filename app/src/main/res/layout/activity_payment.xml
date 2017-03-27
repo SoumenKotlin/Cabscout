@@ -51,12 +51,6 @@
             android:padding="20dp"
             style="?android:attr/borderlessButtonStyle"/>
 
-        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-            android:id="@+id/pocket"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:indeterminate="true"/>
-
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"

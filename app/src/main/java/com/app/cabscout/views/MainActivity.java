@@ -202,21 +202,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.anyCab:
+                car_type = "0";
                 CSPreferences.putString(activity, "car_type", "0");
+                ModelManager.getInstance().getNearbyDriversManager().getNearbyDrivers(activity,
+                        Operations.nearbyDriversTask(activity, latLng.latitude, latLng.longitude, car_type));
                 anyCab.setImageResource(R.drawable.ic_icon_any_car_selected);
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car);
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car);
                 break;
 
             case R.id.regularCab:
+                car_type = "1";
                 CSPreferences.putString(activity, "car_type", "1");
+                ModelManager.getInstance().getNearbyDriversManager().getNearbyDrivers(activity,
+                        Operations.nearbyDriversTask(activity, latLng.latitude, latLng.longitude, car_type));
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car_selected);
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car);
                 anyCab.setImageResource(R.drawable.ic_icon_any_car);
                 break;
 
             case R.id.deluxeCab:
+                car_type = "2";
                 CSPreferences.putString(activity, "car_type", "2");
+                ModelManager.getInstance().getNearbyDriversManager().getNearbyDrivers(activity,
+                        Operations.nearbyDriversTask(activity, latLng.latitude, latLng.longitude, car_type));
                 deluxeCab.setImageResource(R.drawable.ic_icon_deluxe_car_selected);
                 anyCab.setImageResource(R.drawable.ic_icon_any_car);
                 regularCab.setImageResource(R.drawable.ic_icon_regular_car);
@@ -376,6 +385,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .position(new LatLng(NearbyDriversManager.latitudeList.get(i), NearbyDriversManager.longitudeList.get(i))))
                             .setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_icon_car));
                 }
+                break;
+
+            case Constants.DRIVER_NEARBY_EMPTY:
+                googleMap.clear();
                 break;
         }
     }
